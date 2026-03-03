@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متحف آرت هيفن</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="curtain" id="curtain" onclick="openCurtain()">
+        <div class="curtain-side left"></div>
+        <div class="curtain-side right">
+            <div class="welcome-msg">
+                <h2>مرحباً بكم في آرت هيفن</h2>
+                <p>اضغط لفتح الستارة</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="museum">
+        <div class="frame gojo">
+            <img src="images/gojo.jpg" alt="المركز الأول" onerror="this.style.display='none'">
+            <div class="label">المركز الأول: Gojo</div>
+        </div>
+        <div class="frame geto">
+            <img src="images/geto.jpg" alt="المركز الثاني" onerror="this.style.display='none'">
+            <div class="label">المركز الثاني: Geto</div>
+        </div>
+        <div class="frame shoko">
+            <img src="images/shoko.jpg" alt="المركز الثالث" onerror="this.style.display='none'">
+            <div class="label">المركز الثالث: Shoko</div>
+        </div>
+    </div>
+
+    <script>
+        function openCurtain() {
+            document.getElementById('curtain').classList.add('opened');
+        }
+    </script>
+</body>
+</html>
