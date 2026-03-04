@@ -33,9 +33,33 @@
         </div>
     </div>
 
+    <div id="comments-section" style="max-width: 900px; margin: 100px auto; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px;">
+        <h2 style="color: gold; text-align: center;">زهرة تقييمات الزوار</h2>
+        <script src="https://giscus.app/client.js"
+            data-repo="omarsib/art-heaven-museum"
+            data-repo-id="R_kgN..." 
+            data-category="Announcements"
+            data-category-id="DIC_..."
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="bottom"
+            data-theme="dark"
+            data-lang="ar"
+            crossorigin="anonymous"
+            async>
+        </script>
+    </div>
+
     <script>
         function openCurtain() {
-            document.getElementById('curtain').classList.add('opened');
+            const curtain = document.getElementById('curtain');
+            curtain.classList.add('opened');
+            // التأكد من إزالة الستارة تماماً بعد انتهاء الحركة لكي لا تعيق الضغط على الصور
+            setTimeout(() => {
+                curtain.style.display = 'none';
+            }, 2500); 
         }
     </script>
 </body>
