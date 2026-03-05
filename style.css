@@ -6,7 +6,7 @@ body {
     overflow-x: hidden;
 }
 
-/* تنسيق الستارة الأساسي */
+/* --- نظام الستارة الجديد والمضمون --- */
 .curtain {
     position: fixed;
     top: 0;
@@ -21,26 +21,22 @@ body {
 .curtain-side {
     position: absolute;
     top: 0;
-    width: 50%; /* كل طرف يأخذ نصف الشاشة */
+    width: 50%;
     height: 100%;
     background: #7a0000;
     background-image: repeating-linear-gradient(90deg, #7a0000, #7a0000 40px, #8b0000 41px, #8b0000 80px);
     border: 2px solid #5e0000;
     box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
-    transition: width 1.8s cubic-bezier(0.45, 0.05, 0.55, 0.95); /* الحركة تعتمد على العرض */
+    transition: width 1.8s cubic-bezier(0.45, 0.05, 0.55, 0.95);
     z-index: 1001;
 }
 
-/* الطرف الأيسر ملتصق باليسار والطرف الأيمن ملتصق باليمين */
 .left { left: 0; }
 .right { right: 0; }
 
-/* حركة الفتح: تقليص العرض لـ 5% فقط ليظل طرف صغير جداً ظاهر */
-.opened .curtain-side { 
-    width: 5% !important; 
-}
+/* حركة الانكماش للجوانب (5% ليبقى طرف صغير) */
+.opened .curtain-side { width: 5% !important; }
 
-/* نص الترحيب */
 .welcome-msg {
     position: absolute;
     width: 100%;
@@ -54,76 +50,59 @@ body {
     transition: opacity 0.5s ease;
 }
 
-.welcome-msg h1 { font-size: 2.5rem; margin: 0; }
-.brand-name { font-size: 6rem; color: #d4af37; margin: 10px 0; }
+.welcome-msg h1 { font-size: 2.5rem; margin: 0; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+.brand-name { font-size: 6rem; color: #d4af37; margin: 10px 0; text-shadow: 0 0 20px rgba(212, 175, 55, 0.6); letter-spacing: 5px; }
+.welcome-msg p { font-size: 1.5rem; opacity: 0.8; animation: blink 1.5s infinite; }
 
-.opened .welcome-msg { 
-    opacity: 0; 
-    visibility: hidden;
-}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-/* --- إعادة تنسيق المتحف والبراويز الفخمة --- */
+.opened .welcome-msg { opacity: 0; visibility: hidden; }
 
+/* --- توزيع المتحف (تنسيقك القديم 100%) --- */
 .museum {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: center; /* توازيهم في المنتصف */
-    gap: 80px; /* مسافة مريحة بين البراويز */
+    gap: 60px;
     padding: 150px 20px;
     min-height: 80vh;
 }
 
-/* تنسيق البرواز الذهبي الملكي (Frame) */
 .frame {
-    position: relative;
-    border: 15px ridge #d4af37; /* حد ذهبي عريض ومضلع */
-    background: #000;
-    box-shadow: 0 30px 60px rgba(0,0,0,1), /* ظل خارجي عميق */
-                inset 0 0 20px rgba(212, 175, 55, 0.5); /* لمعة ذهبية داخلية */
-    transition: transform 0.5s ease, box-shadow 0.5s ease;
-    overflow: hidden; /* لضمان عدم خروج الصورة عن البرواز */
+    border: 12px ridge #d4af37;
+    background: #111;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.9);
+    transition: transform 0.5s;
 }
 
-/* تأثير التكبير عند تمرير الماوس */
-.frame:hover {
-    transform: scale(1.05);
-    box-shadow: 0 40px 80px rgba(212, 175, 55, 0.4); /* ظل ذهبي عند الهوفر */
-}
+.frame:hover { transform: scale(1.1); }
 
-/* تخصيص الأحجام (Gojo الأكبر في المنتصف) */
-.gojo {
-    width: 350px;
-    height: 500px;
-    border-color: #ffd700; /* ذهبي أنقى للمركز الأول */
-    z-index: 10; /* ليكون في المقدمة قليلاً */
-}
+.gojo { width: 320px; height: 450px; border-color: #ffd700; }
+.geto, .shoko { width: 280px; height: 380px; margin-top: 50px; }
 
-.geto, .shoko {
-    width: 290px;
-    height: 400px;
-}
-
-/* تنسيق الملصق السفلي (Label) */
 .label {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0)); /* تدرج خلف النص */
-    color: #d4af37; /* نص ذهبي */
+    background: #d4af37;
+    color: #000;
     text-align: center;
-    padding: 15px 10px;
-    font-size: 1.2rem;
+    padding: 10px;
     font-weight: 900;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-    border-top: 1px solid rgba(212, 175, 55, 0.3);
 }
 
-/* تنسيق الصورة داخل البرواز */
-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* لملء البرواز بدون تشويه */
-    filter: sepia(20%) contrast(110%); /* لمسة فنية كلاسيكية */
+img { width: 100%; height: 100%; object-fit: cover; }
+
+/* --- قسم التعليقات (تنسيقك القديم 100%) --- */
+#comments-section {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 40px;
+    background: #151515;
+    border-radius: 20px;
+    border: 1px solid #333;
+}
+
+.comments-title {
+    color: #d4af37;
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
 }
