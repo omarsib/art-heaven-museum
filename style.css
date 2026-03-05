@@ -1,15 +1,22 @@
+/* --- الإعدادات العامة والخلفية المتحركة --- */
 body {
     margin: 0;
     background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
-    background-size: 200% 200%; /* ضروري لعمل أنيميشن الخلفية */
+    background-size: 200% 200%;
     background-attachment: fixed;
     color: #d4af37;
     font-family: 'Cairo', sans-serif;
     overflow-x: hidden;
-    animation: bgMove 10s ease infinite; /* تفعيل أنيميشن الخلفية */
+    animation: bgMove 10s ease infinite;
 }
 
-/* --- نظام الستارة المضمون --- */
+@keyframes bgMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* --- نظام الستارة (حل مشكلة الجوال النهائي) --- */
 .curtain {
     position: fixed;
     top: 0;
@@ -19,11 +26,14 @@ body {
     z-index: 2000;
     cursor: pointer;
     overflow: hidden;
+    transition: visibility 0.8s;
 }
 
-/* حل مشكلة الجوال: السماح باللمس لما تحت الستارة عند فتحها */
+/* عند الفتح: تختفي الستارة تماماً لعدم إعاقة اللمس وتوسيع المساحة */
 .curtain.opened {
     pointer-events: none;
+    visibility: hidden;
+    transition-delay: 1.8s;
 }
 
 .curtain-side {
@@ -41,8 +51,9 @@ body {
 
 .left { left: 0; }
 .right { right: 0; }
-.opened .curtain-side { width: 4% !important; }
+.opened .curtain-side { width: 0% !important; }
 
+/* رسالة الترحيب */
 .welcome-msg {
     position: absolute;
     width: 100%;
@@ -57,7 +68,7 @@ body {
 }
 
 .brand-name { 
-    font-size: clamp(3rem, 10vw, 6rem); /* حجم مرن للجوال والكمبيوتر */
+    font-size: clamp(3rem, 10vw, 6rem); 
     color: #d4af37; 
     text-shadow: 0 0 30px rgba(212, 175, 55, 0.8); 
 }
@@ -68,25 +79,22 @@ body {
 }
 
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
 .opened .welcome-msg { opacity: 0; visibility: hidden; }
 
-/* --- تصميم المتحف الاحترافي --- */
+/* --- تصميم التوب 3 (الشكل الهرمي الذهبي) --- */
 .museum {
     display: grid;
-    /* الترتيب الافتراضي (للكومبيوتر) */
     grid-template-areas: 
         ". first ."
         "second . third";
     justify-content: center;
     align-items: center;
     gap: 40px;
-    padding: 180px 20px 100px;
+    padding: 180px 20px 60px;
     max-width: 1200px;
     margin: 0 auto;
 }
 
-/* القاعدة العامة للبرواز */
 .frame {
     position: relative;
     background: #111;
@@ -96,6 +104,7 @@ body {
     border: 2px solid rgba(212, 175, 55, 0.3);
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     margin: 0 auto;
+    overflow: hidden;
 }
 
 .frame:hover {
@@ -104,12 +113,10 @@ body {
     box-shadow: 0 0 40px rgba(212, 175, 55, 0.4);
 }
 
-/* توزيع المراكز بأحجام متناسبة */
 .gojo { grid-area: first; width: min(380px, 80vw); height: auto; aspect-ratio: 3/4; border: 3px solid #ffd700; }
 .geto { grid-area: second; width: min(320px, 75vw); height: auto; aspect-ratio: 3/4; }
 .shoko { grid-area: third; width: min(320px, 75vw); height: auto; aspect-ratio: 3/4; }
 
-/* تصميم الملصق (Label) المودرن */
 .label {
     position: absolute;
     bottom: 20px;
@@ -122,10 +129,63 @@ body {
     border-radius: 50px;
     border: 1px solid #d4af37;
     font-weight: bold;
-    white-space: nowrap;
     font-size: 0.9rem;
+    z-index: 2;
 }
 
+/* --- قاعة الفضة (اللوحات الـ 6 الإضافية) --- */
+.silver-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: center;
+    gap: 30px;
+    padding: 40px 20px 100px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.frame.silver {
+    width: 220px;
+    height: 300px;
+    border: 2px solid rgba(192, 192, 192, 0.3);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* تأثير البريق الفضي عند التمرير */
+.frame.silver::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -60%;
+    width: 20%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(30deg);
+    transition: all 0.6s;
+}
+
+.frame.silver:hover::after { left: 120%; }
+
+.frame.silver:hover {
+    border-color: #c0c0c0;
+    box-shadow: 0 0 25px rgba(192, 192, 192, 0.4);
+    transform: translateY(-10px) scale(1.05);
+}
+
+.label-silver {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(192, 192, 192, 0.9);
+    color: #000;
+    padding: 2px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    z-index: 2;
+}
+
+/* --- تنسيقات الصور العامة --- */
 img {
     width: 100%;
     height: 100%;
@@ -133,23 +193,31 @@ img {
     border-radius: 10px;
 }
 
-/* --- تعديلات الجوال (نقص كان موجود سابقاً) --- */
+/* --- تعديلات الجوال (Responsive) --- */
 @media (max-width: 768px) {
     .museum {
         display: flex;
-        flex-direction: column; /* ترتيب عمودي للجوال */
+        flex-direction: column;
         padding-top: 120px;
     }
-    
-    .gojo { order: 1; } /* Gojo دائماً في القمة */
+    .gojo { order: 1; }
     .geto { order: 2; }
     .shoko { order: 3; }
+
+    .silver-gallery {
+        grid-template-columns: repeat(2, auto);
+        gap: 15px;
+    }
+    .frame.silver {
+        width: 160px;
+        height: 220px;
+    }
 }
 
-/* --- قسم التعليقات المطور --- */
+/* --- قسم التعليقات --- */
 #comments-section {
     max-width: 900px;
-    margin: 100px auto;
+    margin: 50px auto;
     padding: 40px;
     background: rgba(20, 20, 20, 0.8);
     backdrop-filter: blur(15px);
@@ -162,63 +230,4 @@ img {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 40px;
-    text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-}
-
-/* أنيميشن الخلفية */
-@keyframes bgMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-
-/* --- قاعة الفضة --- */
-.silver-gallery {
-    display: grid;
-    grid-template-columns: repeat(3, auto); /* 3 لوحات في الصف */
-    justify-content: center;
-    gap: 30px;
-    padding: 50px 20px;
-    max-width: 1100px;
-    margin: 0 auto;
-}
-
-/* البرواز الفضي */
-.frame.silver {
-    width: 220px; /* أصغر من الذهبي */
-    height: 300px;
-    border: 2px solid rgba(192, 192, 192, 0.4); /* لون فضي هادئ */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-
-.frame.silver:hover {
-    border-color: #c0c0c0;
-    box-shadow: 0 0 25px rgba(192, 192, 192, 0.4); /* توهج فضي */
-    transform: translateY(-10px) scale(1.05);
-}
-
-/* ملصق فضي صغير */
-.label-silver {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(192, 192, 192, 0.9);
-    color: #000;
-    padding: 2px 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 0.8rem;
-}
-
-/* تنسيق الجوال للوحات الفضية */
-@media (max-width: 768px) {
-    .silver-gallery {
-        grid-template-columns: repeat(2, auto); /* لوحتين فقط في الصف بالجوال */
-        gap: 15px;
-    }
-    .frame.silver {
-        width: 160px; /* حجم أصغر ليتناسب مع شاشة الجوال */
-        height: 220px;
-    }
 }
