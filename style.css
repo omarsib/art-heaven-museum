@@ -6,7 +6,7 @@ body {
     overflow-x: hidden;
 }
 
-/* تنسيق الستارة المحسن */
+/* تنسيق الستارة */
 .curtain {
     position: fixed;
     top: 0;
@@ -23,13 +23,15 @@ body {
     width: 50%;
     height: 100%;
     background: #7a0000;
-    background-image: repeating-linear-gradient(90deg, #7a0000, #7a0000 40px, #8b0000 41px, #8b0000 80px); /* تأثير قماش */
+    background-image: repeating-linear-gradient(90deg, #7a0000, #7a0000 40px, #8b0000 41px, #8b0000 80px);
     border: 2px solid #5e0000;
     box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
-    transition: transform 1.8s cubic-bezier(0.45, 0.05, 0.55, 0.95); /* حركة انسيابية جداً */
+    transition: transform 1.8s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+    position: relative;
+    z-index: 2;
 }
 
-/* نص الترحيب في المنتصف تماماً */
+/* نص الترحيب */
 .welcome-msg {
     position: absolute;
     width: 100%;
@@ -38,38 +40,22 @@ body {
     transform: translate(-50%, -50%);
     text-align: center;
     color: #fff;
-    pointer-events: none; /* عشان ما يعيق النقرة على الستارة */
+    z-index: 5;
+    pointer-events: none;
 }
 
-.welcome-msg h1 {
-    font-size: 2.5rem;
-    margin: 0;
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+.welcome-msg h1 { font-size: 2.5rem; margin: 0; }
+.brand-name { 
+    font-size: 6rem; 
+    color: #d4af37; 
+    margin: 10px 0; 
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.6); 
 }
 
-.brand-name {
-    font-size: 6rem; /* تكبير الخط جداً */
-    color: #d4af37;
-    margin: 10px 0;
-    text-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
-    letter-spacing: 5px;
-}
-
-.welcome-msg p {
-    font-size: 1.5rem;
-    opacity: 0.8;
-    animation: blink 1.5s infinite;
-}
-
-@keyframes blink { 
-    0%, 100% { opacity: 1; } 
-    50% { opacity: 0.3; } 
-}
-
-/* حركة الفتح (90% ليبقى الطرف ظاهراً) */
+/* --- هنا التصحيح المهم --- */
 .opened .left { transform: translateX(-90%); }
 .opened .right { transform: translateX(90%); }
-.opened .welcome-msg { display: none; }
+.opened .welcome-msg { opacity: 0; visibility: hidden; }
 
 /* توزيع المتحف */
 .museum {
@@ -89,8 +75,7 @@ body {
 }
 
 .frame:hover { transform: scale(1.1); }
-
-.gojo { width: 320px; height: 450px; border-color: #ffd700; }
+.gojo { width: 320px; height: 450px; }
 .geto, .shoko { width: 280px; height: 380px; margin-top: 50px; }
 
 .label {
@@ -103,7 +88,6 @@ body {
 
 img { width: 100%; height: 100%; object-fit: cover; }
 
-/* قسم التعليقات */
 #comments-section {
     max-width: 1000px;
     margin: 50px auto;
@@ -111,11 +95,4 @@ img { width: 100%; height: 100%; object-fit: cover; }
     background: #151515;
     border-radius: 20px;
     border: 1px solid #333;
-}
-
-.comments-title {
-    color: #d4af37;
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 30px;
 }
