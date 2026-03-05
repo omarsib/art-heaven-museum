@@ -38,11 +38,11 @@ body {
 
 /* حركة الفتح: كل طرف يسحب نفسه لزاويته ويبقى 10% ظاهر */
 .opened .left { 
-    left: -40% !important; 
+    left: 40% !important; 
 }
 
 .opened .right { 
-    right: -40% !important; 
+    right: 40% !important; 
 }
 
 /* نص الترحيب في المنتصف */
