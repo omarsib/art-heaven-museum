@@ -66,13 +66,19 @@ body {
     50% { opacity: 0.3; } 
 }
 
-/* حركة الفتح: يبتعدان بنسبة 90% فقط ليبقى طرف صغير (10%) ظاهر كديكور */
+/* التصحيح النهائي: إجبار الطرفين على الابتعاد عن المركز */
 .opened .left { 
-    transform: translateX(-90%); 
+    transform: translateX(-90%) !important; /* دفع الطرف الأيسر لليسار */
 }
 
 .opened .right { 
-    transform: translateX(90%); 
+    transform: translateX(90%) !important; /* دفع الطرف الأيمن لليمين */
+}
+
+.opened .welcome-msg { 
+    opacity: 0; 
+    visibility: hidden;
+    transition: 0.5s; 
 }
 
 /* النص يختفي تماماً عشان ما يغطي على الصور */
