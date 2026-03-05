@@ -19,28 +19,10 @@
         </div>
     </div>
 
-    <div class="museum">
-        <div class="frame gojo">
-            <img src="images/gojo.jpg" alt="المركز الأول" onerror="this.style.display='none'">
-            <div class="label">المركز الأول: Gojo</div>
+    <div class="museum" id="top3-container">
         </div>
-        <div class="frame geto">
-            <img src="images/geto.jpg" alt="المركز الثاني" onerror="this.style.display='none'">
-            <div class="label">المركز الثاني: Geto</div>
-        </div>
-        <div class="frame shoko">
-            <img src="images/shoko.jpg" alt="المركز الثالث" onerror="this.style.display='none'">
-            <div class="label">المركز الثالث: Shoko</div>
-        </div>
-    </div>
 
-    <div class="silver-gallery">
-        <div class="frame silver"><img src="images/art4.jpg" onerror="this.style.display='none'"><div class="label-silver">#4</div></div>
-        <div class="frame silver"><img src="images/art5.jpg" onerror="this.style.display='none'"><div class="label-silver">#5</div></div>
-        <div class="frame silver"><img src="images/art6.jpg" onerror="this.style.display='none'"><div class="label-silver">#6</div></div>
-        <div class="frame silver"><img src="images/art7.jpg" onerror="this.style.display='none'"><div class="label-silver">#7</div></div>
-        <div class="frame silver"><img src="images/art8.jpg" onerror="this.style.display='none'"><div class="label-silver">#8</div></div>
-        <div class="frame silver"><img src="images/art9.jpg" onerror="this.style.display='none'"><div class="label-silver">#9</div></div>
+    <div class="silver-gallery" id="silver-container">
         </div>
 
     <div id="comments-section">
@@ -63,32 +45,40 @@
     </div>
 
     <div id="admin-panel" style="display:none; position:fixed; bottom:20px; right:20px; background:#222; padding:20px; border-radius:15px; border:1px solid #d4af37; z-index:9999; width: 260px; box-shadow: 0 0 20px rgba(0,0,0,0.8);">
-        <h3 style="color:#d4af37; margin-top:0; font-size: 1.2rem;">إضافة لوحة جديدة</h3>
+        <h3 style="color:#d4af37; margin-top:0; font-size: 1.2rem;">إدارة المتحف</h3>
         
-        <label style="color:#ccc; font-size:12px; display:block; margin-bottom:5px;">رقم الترتيب (مثلاً 10):</label>
-        <input type="number" id="imgOrder" value="10" style="width:100%; margin-bottom:15px; background:#333; color:#fff; border:1px solid #444; border-radius:5px; padding:8px;">
+        <label style="color:#ccc; font-size:12px; display:block; margin-bottom:5px;">رقم المركز (1، 2، 3 للتوب أو 4+ للبقية):</label>
+        <input type="number" id="imgOrder" value="1" style="width:100%; margin-bottom:15px; background:#333; color:#fff; border:1px solid #444; border-radius:5px; padding:8px;">
         
         <input type="file" id="imageInput" accept="image/*" style="margin-bottom:15px; color:#fff; font-size:12px; width: 100%;">
         
-        <button onclick="uploadImage()" id="uploadBtn" style="width:100%; background:#d4af37; color:#000; border:none; padding:12px; cursor:pointer; font-weight:bold; border-radius:8px; transition: 0.3s;">رفع وتحديد المكان</button>
+        <button onclick="uploadImage()" id="uploadBtn" style="width:100%; background:#d4af37; color:#000; border:none; padding:12px; cursor:pointer; font-weight:bold; border-radius:8px;">تحديث المركز الآن</button>
         
-        <p id="status" style="color:#ffd700; font-size:11px; margin-top:12px; text-align:center; min-height: 15px;"></p>
+        <p id="status" style="color:#ffd700; font-size:11px; margin-top:12px; text-align:center;"></p>
         
-        <button onclick="toggleAdmin()" style="background:transparent; color:#ff4444; border:none; cursor:pointer; font-size:12px; display:block; margin:15px auto 0;">إغلاق اللوحة</button>
-        <button onclick="clearAllData()" style="background:transparent; color:#888; border:none; cursor:pointer; font-size:10px; display:block; margin:5px auto 0;">حذف الصور المرفوعة (لي فقط)</button>
+        <button onclick="toggleAdmin()" style="background:transparent; color:#ff4444; border:none; cursor:pointer; font-size:12px; display:block; margin:15px auto 0;">إغلاق</button>
+        <button onclick="clearSpecificData()" style="background:transparent; color:#888; border:none; cursor:pointer; font-size:10px; display:block; margin:5px auto 0;">إعادة ضبط المصنع</button>
     </div>
 
-    <div onclick="toggleAdmin()" style="position:fixed; bottom:0; left:0; width:20px; height:20px; cursor:pointer; opacity:0.01; background:white; z-index:10000;"></div>
+    <div onclick="toggleAdmin()" style="position:fixed; bottom:0; left:0; width:30px; height:30px; cursor:pointer; opacity:0.01; background:white; z-index:10000;"></div>
 
     <script>
-        // 1. وظيفة فتح الستارة
-        function openCurtain() {
-            document.getElementById('curtain').classList.add('opened');
-        }
-
-        // 2. إعدادات الـ API ونظام الرفع
         const API_KEY = '9f747dc546be7780cc631dd85cd4be26';
 
+        // 1. البيانات الافتراضية (الصور الأصلية)
+        const defaultData = [
+            { order: 1, url: 'images/gojo.jpg', label: 'المركز الأول: Gojo' },
+            { order: 2, url: 'images/geto.jpg', label: 'المركز الثاني: Geto' },
+            { order: 3, url: 'images/shoko.jpg', label: 'المركز الثالث: Shoko' },
+            { order: 4, url: 'images/art4.jpg' },
+            { order: 5, url: 'images/art5.jpg' },
+            { order: 6, url: 'images/art6.jpg' },
+            { order: 7, url: 'images/art7.jpg' },
+            { order: 8, url: 'images/art8.jpg' },
+            { order: 9, url: 'images/art9.jpg' }
+        ];
+
+        function openCurtain() { document.getElementById('curtain').classList.add('opened'); }
         function toggleAdmin() {
             const panel = document.getElementById('admin-panel');
             panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
@@ -100,9 +90,9 @@
             const status = document.getElementById('status');
             const btn = document.getElementById('uploadBtn');
 
-            if (!fileInput.files[0]) return alert("يا عمر، اختر صورة أولاً!");
+            if (!fileInput.files[0]) return alert("اختر صورة يا عمر!");
 
-            status.innerText = "جاري معالجة الرفع...";
+            status.innerText = "جاري الرفع...";
             btn.disabled = true;
 
             const formData = new FormData();
@@ -116,52 +106,71 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    saveImageUrl(data.data.url, orderInput.value);
-                    status.innerText = "تم الرفع والترتيب بنجاح!";
+                    updateMuseumData(data.data.url, parseInt(orderInput.value));
+                    status.innerText = "تم التحديث بنجاح!";
                     setTimeout(() => location.reload(), 1000);
                 }
             } catch (error) {
-                status.innerText = "حدث خطأ غير متوقع.";
-                console.error(error);
+                status.innerText = "خطأ في الاتصال.";
             } finally {
                 btn.disabled = false;
             }
         }
 
-        // حفظ الرابط والترتيب في المتصفح
-        function saveImageUrl(url, order) {
-            let savedImages = JSON.parse(localStorage.getItem('myArts')) || [];
-            savedImages.push({ url: url, order: parseInt(order) });
-            // ترتيب البيانات لضمان ظهورها بالتسلسل الصحيح
-            savedImages.sort((a, b) => a.order - b.order);
-            localStorage.setItem('myArts', JSON.stringify(savedImages));
+        function updateMuseumData(url, order) {
+            let userImages = JSON.parse(localStorage.getItem('myArts')) || [];
+            // حذف القديم إذا كان بنفس الترتيب
+            userImages = userImages.filter(img => img.order !== order);
+            userImages.push({ url, order });
+            localStorage.setItem('myArts', JSON.stringify(userImages));
         }
 
-        // تحميل الصور المرفوعة وعرضها في القاعة الفضية
-        function loadGallery() {
-            const gallery = document.querySelector('.silver-gallery');
-            let savedImages = JSON.parse(localStorage.getItem('myArts')) || [];
-            
-            savedImages.forEach((imgObj) => {
-                const artHtml = `
-                    <div class="frame silver">
-                        <img src="${imgObj.url}" alt="لوحة مرفوعة">
-                        <div class="label-silver">#${imgObj.order}</div>
+        function renderMuseum() {
+            const top3Container = document.getElementById('top3-container');
+            const silverContainer = document.getElementById('silver-container');
+            const userImages = JSON.parse(localStorage.getItem('myArts')) || [];
+
+            // دمج الافتراضي مع ما رفعه المستخدم
+            let finalDisplay = defaultData.map(def => {
+                const userUpdate = userImages.find(u => u.order === def.order);
+                return userUpdate ? { ...def, url: userUpdate.url } : def;
+            });
+
+            // إضافة الصور الجديدة تماماً (أكبر من المركز 9)
+            userImages.forEach(u => {
+                if (!finalDisplay.find(f => f.order === u.order)) {
+                    finalDisplay.push({ order: u.order, url: u.url });
+                }
+            });
+
+            // الترتيب النهائي
+            finalDisplay.sort((a, b) => a.order - b.order);
+
+            finalDisplay.forEach(item => {
+                const isTop3 = item.order <= 3;
+                let frameClass = isTop3 ? (item.order === 1 ? 'gojo' : (item.order === 2 ? 'geto' : 'shoko')) : 'silver';
+                let labelClass = isTop3 ? 'label' : 'label-silver';
+                let labelText = isTop3 ? item.label : `#${item.order}`;
+
+                const html = `
+                    <div class="frame ${frameClass}">
+                        <img src="${item.url}" alt="Art" onerror="this.src='https://via.placeholder.com/300?text=Error'">
+                        <div class="${labelClass}">${labelText}</div>
                     </div>`;
-                gallery.innerHTML += artHtml;
+
+                if (isTop3) top3Container.innerHTML += html;
+                else silverContainer.innerHTML += html;
             });
         }
 
-        // وظيفة اختيارية لمسح البيانات إذا أردت البدء من جديد
-        function clearAllData() {
-            if(confirm("هل تريد حذف جميع الصور التي رفعتها؟")) {
+        function clearSpecificData() {
+            if(confirm("هل تريد العودة للصور الأصلية؟")) {
                 localStorage.removeItem('myArts');
                 location.reload();
             }
         }
 
-        // تشغيل الجاليري عند تحميل الصفحة تماماً
-        window.addEventListener('load', loadGallery);
+        window.onload = renderMuseum;
     </script>
 </body>
 </html>
