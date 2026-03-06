@@ -22,16 +22,21 @@
 
 body {
     margin: 0;
-    /* زدنا مساحة الخلفية واستخدمنا ألوان متناسقة تظهر الحركة */
-    background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 40%, #000000 100%);
-    background-size: 300% 300%;
+    /* ألوان فاتحة أكثر قليلاً لكي لا تظهر سوداء تماماً */
+    background: radial-gradient(circle at center, #252525 0%, #0a0a0a 50%, #000000 100%);
+    background-size: 200% 200%;
     background-attachment: fixed;
     color: white;
     font-family: 'Cairo', sans-serif;
     overflow-x: hidden;
     direction: rtl;
-    /* الأنيميشن هنا سيعمل الآن بوضوح */
-    animation: bgMove 12s ease-in-out infinite;
+    animation: bgMove 8s ease-in-out infinite; /* سرعنا الحركة لتلاحظها */
+}
+
+@keyframes bgMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 /* حركة انسيابية للخلفية تعطي إيحاء بإضاءة المتحف المتحركة */
