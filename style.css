@@ -9,43 +9,25 @@
     --bg-dark: #000;
 }
 
-/* الخلفية المتحركة */
-/* --- الجزء المعدل للخلفية الفخمة --- */
-:root {
-    --gold: #d4af37;
-    --silver: #c0c0c0;
-    --dark: #050505;
-    --glow: rgba(212,175,55,0.6);
-    --bg-light: #1a1a1a; /* لون رمادي عميق */
-    --bg-dark: #000000;  /* أسود ملكي */
-}
-
+/* الخلفية المتحركة المعدلة بلمعة معدنية */
 body {
     margin: 0;
-    /* ألوان فاتحة أكثر قليلاً لكي لا تظهر سوداء تماماً */
-    background: radial-gradient(circle at center, #252525 0%, #0a0a0a 50%, #000000 100%);
+    /* استخدمت درجات تمنع السواد التام وتظهر الحركة بوضوح */
+    background: radial-gradient(circle at center, #2a2a2a 0%, #0d0d0d 40%, #000000 100%);
     background-size: 200% 200%;
     background-attachment: fixed;
     color: white;
     font-family: 'Cairo', sans-serif;
     overflow-x: hidden;
     direction: rtl;
-    animation: bgMove 8s ease-in-out infinite; /* سرعنا الحركة لتلاحظها */
+    animation: bgMove 10s ease-in-out infinite;
 }
 
-@keyframes bgMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* حركة انسيابية للخلفية تعطي إيحاء بإضاءة المتحف المتحركة */
 @keyframes bgMove {
     0% { background-position: 0% 0%; }
     50% { background-position: 100% 100%; }
     100% { background-position: 0% 0%; }
 }
-/* ------------------------------- */
 
 /* زر السيرفر */
 .nav-btn {
@@ -83,15 +65,39 @@ body {
     margin: auto;
 }
 
-/* الإطار العام */
+/* الإطار العام مع إضافة تأثير لمعة الجوهرة */
 .frame {
     position: relative;
     background: #111;
     border-radius: 16px;
-    overflow: hidden;
+    overflow: hidden; /* ضروري لقص لمعة الجوهرة داخل الإطار */
     transition: all 0.35s ease;
     border: 2px solid rgba(212,175,55,0.2);
     box-shadow: 0 15px 40px rgba(0,0,0,0.7), 0 0 10px rgba(212,175,55,0.1);
+}
+
+/* كود لمعة الجوهرة (الخط الضوئي المتحرك) */
+.frame::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        to right,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    transform: skewX(-25deg);
+    transition: 0.6s;
+    z-index: 5; /* لضمان ظهورها فوق الصورة */
+}
+
+/* تشغيل اللمعة عند وضع الماوس */
+.frame:hover::before {
+    left: 150%;
 }
 
 .frame:hover {
@@ -219,8 +225,8 @@ body {
     }
 }
 
-/* إضاءة المتحف */
-.frame::before {
+/* إضاءة المتحف العلويّة */
+.frame::after {
     content: "";
     position: absolute;
     top: -80px;
@@ -240,7 +246,8 @@ body {
 }
 
 /* انعكاس تحت اللوحات */
-.frame::after {
+/* ملاحظة: قمت بدمج هذا التأثير بشكل لا يتعارض مع تأثير الجوهرة */
+.frame-reflection {
     content: "";
     position: absolute;
     bottom: -60px;
@@ -255,12 +262,6 @@ body {
     transform: scaleY(-1);
     opacity: 0.25;
     pointer-events: none;
-}
-
-.frame:hover {
-    transform: translateY(-12px) scale(1.04);
-    border-color: #ffd700;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 35px rgba(212,175,55,0.5);
 }
 
 /* --- نظام الستارة --- */
