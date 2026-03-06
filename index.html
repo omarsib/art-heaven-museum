@@ -43,7 +43,6 @@
     </div>
 
     <script>
-        // إعدادات Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyB3boy-qFEQsumI-c56wrjb-q-bBvpGaZc",
             authDomain: "art-heaven-2ebcc.firebaseapp.com",
@@ -60,11 +59,10 @@
         function openCurtain() { document.getElementById('curtain').classList.add('opened'); }
         function toggleAdmin() { const p = document.getElementById('admin-panel'); p.style.display = p.style.display==='none'?'block':'none'; }
 
-        // وظائف التكبير والبلور
         function viewImage(src) {
             document.getElementById('full-image').src = src;
             document.getElementById('image-viewer').style.display = 'flex';
-            document.body.classList.add('modal-open'); // لإضافة البلور من CSS
+            document.body.classList.add('modal-open');
         }
         function closeViewer() {
             document.getElementById('image-viewer').style.display = 'none';
@@ -88,20 +86,31 @@
             } catch(e) { alert("خطأ!"); }
         }
 
-        // جلب الصور من قاعدة البيانات
+        // جلب الصور (تم إصلاح التكرار هنا)
         db.ref('museum').on('value', (snap) => {
             const top3 = document.getElementById('top3-container');
             const silver = document.getElementById('silver-container');
             top3.innerHTML = ''; silver.innerHTML = '';
             const data = snap.val() || {};
+
             for(let i=1; i<=9; i++) {
                 const art = data[i] || {url: 'https://via.placeholder.com/300?text=Soon', label: 'قريباً...'};
                 const isTop = i <= 3;
+                let frameClass = "";
+                let rankText = "";
+
+                if (i === 1) { frameClass = "gojo"; rankText = "المركز الأول"; }
+                else if (i === 2) { frameClass = "geto"; rankText = "المركز الثاني"; }
+                else if (i === 3) { frameClass = "shoko"; rankText = "المركز الثالث"; }
+                else { frameClass = "silver"; rankText = "المركز " + i; }
+
                 const html = `
-                    <div class="frame">
+                    <div class="frame ${frameClass}">
+                        <div class="rank-tag">${rankText}</div>
                         <img src="${art.url}" ondblclick="viewImage('${art.url}')">
-                        <div class="label">${art.label}</div>
+                        <div style="background:rgba(0,0,0,0.7); color:#fff; padding:5px; text-align:center; font-size:12px;">${art.label}</div>
                     </div>`;
+
                 if(isTop) top3.innerHTML += html;
                 else silver.innerHTML += html;
             }
