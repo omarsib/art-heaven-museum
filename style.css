@@ -9,10 +9,9 @@
     --bg-dark: #000;
 }
 
-/* الخلفية المتحركة المعدلة بلمعة معدنية */
+/* 1. الخلفية المتحركة */
 body {
     margin: 0;
-    /* استخدمت درجات تمنع السواد التام وتظهر الحركة بوضوح */
     background: radial-gradient(circle at center, #2a2a2a 0%, #0d0d0d 40%, #000000 100%);
     background-size: 200% 200%;
     background-attachment: fixed;
@@ -29,7 +28,7 @@ body {
     100% { background-position: 0% 0%; }
 }
 
-/* زر السيرفر */
+/* 2. الأزرار والقوائم */
 .nav-btn {
     position: fixed;
     top: 20px;
@@ -51,7 +50,7 @@ body {
     box-shadow: 0 0 18px rgba(212,175,55,0.7);
 }
 
-/* قاعة التوب 3 */
+/* 3. قاعة التوب 3 (كمبيوتر) */
 .museum {
     display: grid;
     grid-template-areas:
@@ -65,18 +64,17 @@ body {
     margin: auto;
 }
 
-/* الإطار العام مع إضافة تأثير لمعة الجوهرة */
+/* 4. الإطارات والتأثيرات (لمعة الجوهرة) */
 .frame {
     position: relative;
     background: #111;
     border-radius: 16px;
-    overflow: hidden; /* ضروري لقص لمعة الجوهرة داخل الإطار */
+    overflow: hidden;
     transition: all 0.35s ease;
     border: 2px solid rgba(212,175,55,0.2);
     box-shadow: 0 15px 40px rgba(0,0,0,0.7), 0 0 10px rgba(212,175,55,0.1);
 }
 
-/* كود لمعة الجوهرة (الخط الضوئي المتحرك) */
 .frame::before {
     content: "";
     position: absolute;
@@ -84,21 +82,13 @@ body {
     left: -150%;
     width: 50%;
     height: 100%;
-    background: linear-gradient(
-        to right,
-        transparent,
-        rgba(255, 255, 255, 0.3),
-        transparent
-    );
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
     transform: skewX(-25deg);
     transition: 0.6s;
-    z-index: 5; /* لضمان ظهورها فوق الصورة */
+    z-index: 5;
 }
 
-/* تشغيل اللمعة عند وضع الماوس */
-.frame:hover::before {
-    left: 150%;
-}
+.frame:hover::before { left: 150%; }
 
 .frame:hover {
     transform: translateY(-10px) scale(1.03);
@@ -106,42 +96,11 @@ body {
     box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 30px rgba(212,175,55,0.35);
 }
 
-/* توهج متحرك عند المركز الأول */
-.gojo {
-    grid-area: first;
-    width: min(400px, 90vw);
-    border: 3px solid #ffd700;
-    box-shadow: 0 0 40px rgba(255,215,0,0.45), 0 20px 60px rgba(0,0,0,0.9);
-}
+.gojo { grid-area: first; width: min(400px, 90vw); border: 3px solid #ffd700; }
+.geto { grid-area: second; width: min(320px, 80vw); border: 2px solid var(--gold); }
+.shoko { grid-area: third; width: min(320px, 80vw); border: 2px solid var(--gold); }
 
-.gojo::after {
-    content: "";
-    position: absolute;
-    inset: -3px;
-    border-radius: 16px;
-    background: linear-gradient(45deg, transparent, #ffd70055, transparent);
-    opacity: 0;
-    transition: .4s;
-}
-
-.gojo:hover::after {
-    opacity: 1;
-}
-
-/* الثاني والثالث */
-.geto {
-    grid-area: second;
-    width: min(320px, 80vw);
-    border: 2px solid var(--gold);
-}
-
-.shoko {
-    grid-area: third;
-    width: min(320px, 80vw);
-    border: 2px solid var(--gold);
-}
-
-/* قاعة الفضة */
+/* 5. قاعة الفضة (كمبيوتر) */
 .silver-gallery {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -151,17 +110,9 @@ body {
     margin: auto;
 }
 
-.frame.silver {
-    width: 100%;
-    border: 2px solid rgba(192,192,192,0.3);
-}
+.frame.silver { width: 100%; border: 2px solid rgba(192,192,192,0.3); }
 
-.frame.silver:hover {
-    border-color: var(--silver);
-    box-shadow: 0 0 25px rgba(192,192,192,0.4);
-}
-
-/* الصور */
+/* 6. الصور والستارة والإنترو */
 .frame img {
     width: 100%;
     height: 420px;
@@ -170,244 +121,24 @@ body {
     transition: transform 0.4s, filter 0.4s;
 }
 
-.frame:hover img {
-    transform: scale(1.06);
-    filter: brightness(1.05) contrast(1.05);
-}
-
-/* اسم الرسام */
-.frame div {
-    backdrop-filter: blur(6px);
-}
-
-/* نافذة الصورة */
-#image-viewer {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.95);
-    z-index: 4000;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-#image-viewer.active {
-    display: flex;
-}
-
-#full-image {
-    max-width: 92%;
-    max-height: 90%;
-    border: 1px solid var(--gold);
-    box-shadow: 0 0 30px rgba(212,175,55,0.5);
-}
-
-/* الجوال */
-@media (max-width:768px) {
-    .museum {
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
-    }
-    .gojo, .geto, .shoko {
-        width: 95%;
-    }
-    .silver-gallery {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-    }
-    .frame img {
-        height: 360px;
-    }
-}
-
-/* إضاءة المتحف العلويّة */
-.frame::after {
-    content: "";
-    position: absolute;
-    top: -80px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 160px;
-    height: 160px;
-    background: radial-gradient(
-        circle,
-        rgba(255,220,120,0.25) 0%,
-        rgba(255,220,120,0.1) 40%,
-        transparent 70%
-    );
-    pointer-events: none;
-    z-index: 1;
-    filter: blur(8px);
-}
-
-/* انعكاس تحت اللوحات */
-/* ملاحظة: قمت بدمج هذا التأثير بشكل لا يتعارض مع تأثير الجوهرة */
-.frame-reflection {
-    content: "";
-    position: absolute;
-    bottom: -60px;
-    left: 0;
-    width: 100%;
-    height: 60px;
-    background: linear-gradient(
-        to bottom,
-        rgba(255,255,255,0.08),
-        transparent
-    );
-    transform: scaleY(-1);
-    opacity: 0.25;
-    pointer-events: none;
-}
-
-/* --- نظام الستارة --- */
-.curtain {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 99999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    overflow: hidden;
-}
-
-.curtain.opened {
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 1s;
-}
-
-.curtain-side {
-    position: absolute;
-    top: 0;
-    width: 50%;
-    height: 100%;
-    background: #7a0000;
-    background-image: repeating-linear-gradient(
-        90deg,
-        #7a0000,
-        #7a0000 40px,
-        #8b0000 41px,
-        #8b0000 80px
-    );
-    box-shadow: inset 0 0 120px rgba(0,0,0,0.9);
-    transition: transform 1.8s cubic-bezier(.7,0,.3,1);
-}
-
-.curtain-side.left {
-    left: 0;
-    transform-origin: left;
-}
-
-.curtain-side.right {
-    right: 0;
-    transform-origin: right;
-}
-
-/* حركة فتح الستارة */
-.curtain.opened .left {
-    transform: translateX(-100%);
-}
-
-.curtain.opened .right {
-    transform: translateX(100%);
-}
-
-/* رسالة الترحيب */
-.welcome-msg {
-    position: absolute;
-    text-align: center;
-    z-index: 5;
-    color: white;
-    transition: opacity .5s;
-}
-
-.curtain.opened .welcome-msg {
-    opacity: 0;
-}
-
 #intro-container {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #000;
-    z-index: 100000; /* فوق كل شيء */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#intro-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* يغطي الشاشة بالكامل */
-}
-
-#skip-btn {
-    position: absolute;
-    bottom: 30px;
-    left: 30px;
-    background: rgba(212, 175, 55, 0.2);
-    color: #d4af37;
-    border: 1px solid #d4af37;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-family: 'Cairo';
-    transition: 0.3s;
-}
-
-#skip-btn:hover {
-    background: #d4af37;
-    color: #000;
-}
-
-#skip-btn {
-    position: absolute;
-    bottom: 30px;
-    left: 30px;
-    z-index: 100001; /* تأكد أنه فوق الفيديو */
-    background: rgba(0, 0, 0, 0.6);
-    color: #d4af37;
-    border: 1px solid #d4af37;
-    padding: 12px 24px;
-    cursor: pointer;
-    font-family: 'Cairo';
-    border-radius: 8px;
-}
-
-/* تنسيق الإنترو وشاشة الدخول */
-#intro-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
     background: #000;
     z-index: 100000;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
-#start-overlay {
-    position: absolute;
-    z-index: 100002;
-    text-align: center;
-}
+#intro-video { width: 100%; height: 100%; object-fit: cover; }
+
+#start-overlay { position: absolute; z-index: 100002; text-align: center; }
 
 #entry-btn {
-    background: #d4af37;
+    background: var(--gold);
     color: black;
     padding: 15px 40px;
     border: none;
@@ -415,76 +146,75 @@ body {
     font-weight: bold;
     cursor: pointer;
     font-family: 'Cairo';
-    box-shadow: 0 0 20px rgba(212,175,55,0.5);
 }
 
-/* إصلاح الصور للجوال */
+#skip-btn {
+    position: absolute;
+    bottom: 30px; left: 30px;
+    z-index: 100001;
+    background: rgba(0, 0, 0, 0.6);
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 12px 24px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.curtain {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.curtain-side {
+    position: absolute;
+    top: 0; width: 50%; height: 100%;
+    background: #7a0000;
+    background-image: repeating-linear-gradient(90deg, #7a0000, #7a0000 40px, #8b0000 41px, #8b0000 80px);
+    transition: transform 1.8s cubic-bezier(.7,0,.3,1);
+}
+
+.curtain-side.left { left: 0; transform-origin: left; }
+.curtain-side.right { right: 0; transform-origin: right; }
+.curtain.opened .left { transform: translateX(-100%); }
+.curtain.opened .right { transform: translateX(100%); }
+.curtain.opened { pointer-events: none; opacity: 0; transition: opacity 1s; }
+
+/* 7. إعدادات الجوال (الضبط النهائي للأبعاد) */
 @media (max-width: 768px) {
     .museum {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
+        gap: 25px !important;
     }
-    .frame {
-        width: 90vw !important;
-        margin-bottom: 20px;
-    }
-    .frame img {
-        height: auto !important;
-        aspect-ratio: 3/4;
-        object-fit: cover;
-    }
-}
 
+    .gojo, .geto, .shoko {
+        width: 92vw !important;
+    }
 
-/* إصلاح شامل لأبعاد الجوال */
-@media (max-width: 768px) {
-    /* التأكد من أن المتحف يأخذ كامل العرض المتاح */
-    .museum, .silver-gallery {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
+    /* قاعة الفضة: 2 جنب بعض في الجوال */
+    .silver-gallery {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        padding: 15px 10px !important;
         width: 100% !important;
-        padding: 10px 0 !important;
-        gap: 20px !important;
     }
 
-    /* إصلاح الإطارات لتكون في المنتصف تماماً */
-    .frame, .gojo, .geto, .shoko {
-        width: 92vw !important; /* تأخذ معظم عرض الشاشة */
-        max-width: none !important;
-        margin: 0 auto !important;
-        left: 0 !important;
-        right: 0 !important;
-        grid-area: auto !important; /* إلغاء نظام الجريد القديم للجوال */
-    }
-
-    /* منع تمطيط الصور */
     .frame img {
-        width: 100% !important;
         height: auto !important;
         aspect-ratio: 3/4 !important;
-        object-fit: cover !important;
     }
 
-    /* إخفاء القائمة الجانبية أو تصغيرها لكي لا تغطي اللوحات */
     .side-menu {
-        width: 140px !important;
+        width: 130px !important;
         right: 10px !important;
         padding: 10px !important;
-        font-size: 12px !important;
     }
-}
-
-/* إصلاح الإنترو لكي لا يترك مساحات سوداء */
-#intro-container {
-    width: 100vw !important;
-    height: 100vh !important;
-    overflow: hidden;
-}
-
-#intro-video {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important; /* يغطي الشاشة بالكامل في الجوال */
 }
