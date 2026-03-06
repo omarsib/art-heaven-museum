@@ -20,17 +20,25 @@
             display: flex; flex-direction: column; gap: 5px;
             border: 1px solid rgba(212, 175, 55, 0.3);
         }
-        .menu-icon span { width: 25px; height: 3px; background: #d4af37; border-radius: 2px; transition: 0.3s; }
+        .menu-icon span {
+            width: 25px; height: 3px; background: #d4af37;
+            border-radius: 2px; transition: 0.3s;
+        }
 
-        /* القائمة الجانبية */
+        /* القائمة الجانبية - مخفية تماماً بدون خط أصفر */
         .side-menu {
             position: fixed; top: 0; right: -285px; 
             width: 260px; height: 100%; background: #0a0a0a;
             z-index: 1000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             padding: 80px 20px; font-family: 'Cairo';
-            border-left: none; box-shadow: none;
+            border-left: none; 
+            box-shadow: none;
         }
-        .side-menu.open { right: 0; border-left: 2px solid #d4af37; box-shadow: -5px 0 20px rgba(0,0,0,0.8); }
+        .side-menu.open { 
+            right: 0; 
+            border-left: 2px solid #d4af37; 
+            box-shadow: -5px 0 20px rgba(0,0,0,0.8);
+        }
 
         .menu-item {
             display: block; color: #fff; text-decoration: none;
@@ -39,26 +47,29 @@
             font-weight: bold; border-right: 4px solid transparent;
             transition: 0.3s; cursor: pointer; text-align: center;
         }
-        .menu-item:hover { background: #222; border-right-color: #d4af37; color: #d4af37; }
+        .menu-item:hover {
+            background: #222; border-right-color: #d4af37; color: #d4af37;
+        }
 
-        .settings-box { display: none; padding: 15px; background: #111; border-radius: 10px; margin-top: 5px; border: 1px solid #333; }
+        .settings-box {
+            display: none; padding: 15px;
+            background: #111; border-radius: 10px; 
+            margin-top: 5px; border: 1px solid #333;
+        }
         .settings-box label { color: #d4af37; font-size: 14px; display: block; margin-bottom: 10px; }
         input[type="range"] { width: 100%; accent-color: #d4af37; cursor: pointer; }
 
-        /* الإدارة والأمان */
-        #admin-panel {
-            display:none; position:fixed; bottom:20px; right:20px; 
-            background:#111; padding:20px; border-radius:15px; 
-            border:1px solid #d4af37; z-index:9999; width: 260px; 
-            box-shadow: 0 0 20px rgba(0,0,0,0.9);
-        }
-        #admin-panel input { width:100%; margin-bottom:10px; background:#222; color:#fff; padding:10px; border:1px solid #333; border-radius:5px; }
-        
         /* نافذة طلب كلمة السر */
         #login-screen {
             display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
-            background:#111; padding:25px; border-radius:15px; border:2px solid #d4af37;
+            background:#111; padding:30px; border-radius:15px; border:2px solid #d4af37;
             z-index:10001; text-align:center; box-shadow: 0 0 50px rgba(0,0,0,1);
+            width: 280px;
+        }
+        #login-screen input {
+            width: 80%; padding: 10px; margin-top: 15px;
+            background: #222; border: 1px solid #444; color: #fff;
+            text-align: center; border-radius: 5px; font-size: 18px;
         }
 
         #image-viewer {
@@ -68,11 +79,21 @@
             cursor: pointer; flex-direction: column;
         }
         #image-viewer.active { display: flex; }
-        #full-image { max-width: 95vw; max-height: 90vh; object-fit: contain; border: 1px solid #d4af37; animation: zoomIn 0.3s ease; }
-        
+        #full-image { 
+            max-width: 95vw; max-height: 90vh; 
+            object-fit: contain; border: 1px solid #d4af37;
+            animation: zoomIn 0.3s ease;
+        }
+        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        body.modal-open .museum, body.modal-open .silver-gallery, body.modal-open #comments-section {
+            filter: blur(15px); pointer-events: none;
+        }
         .rank-badge {
-            position: absolute; top: 15px; width: 100%; text-align: center; color: #ffd700;
-            font-weight: 900; font-size: 1.2rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.9); z-index: 10;
+            position: absolute; top: 15px; width: 100%;
+            text-align: center; color: #ffd700;
+            font-weight: 900; font-size: 1.2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9), 0 0 10px rgba(212, 175, 55, 0.6);
+            z-index: 10;
         }
     </style>
 </head>
@@ -88,10 +109,16 @@
 
 <div class="side-menu" id="sideMenu">
     <a href="server.html" target="_blank" class="menu-item">🌐 السيرفر</a>
+    
     <div class="menu-item" onclick="toggleSettings()">⚙️ الإعدادات</div>
+    
     <div class="settings-box" id="settingsBox">
         <label>مستوى الموسيقى 🎵</label>
         <input type="range" min="0" max="1" step="0.1" value="0.5" oninput="changeVolume(this.value)">
+    </div>
+
+    <div style="position:absolute; bottom:20px; width:calc(100% - 40px); text-align:center; color:#444; font-size:12px;">
+        Art Heaven Museum v2.0
     </div>
 </div>
 
@@ -107,36 +134,51 @@
 
 <div id="image-viewer" onclick="closeViewer()" ondblclick="closeViewer()">
     <img id="full-image" src="">
+    <p style="color: #d4af37; margin-top: 15px; font-family: 'Cairo';">انقر مرتين للإغلاق</p>
 </div>
 
 <div class="museum" id="top3-container"></div>
 <div class="silver-gallery" id="silver-container"></div>
 
 <div id="comments-section" style="max-width: 900px; margin: 50px auto; padding: 20px;">
-    </div>
+    <script src="https://giscus.app/client.js"
+        data-repo="omarsib/art-heaven-museum"
+        data-repo-id="R_kgDORdS7Fw"
+        data-category="Show and tell"
+        data-category-id="DIC_kwDORdS7F84C3rx6"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="dark"
+        data-lang="ar"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
 
 <div id="login-screen">
-    <h3 style="color:#d4af37; margin-bottom:15px; font-family:'Cairo';">منطقة المدير</h3>
-    <input type="password" id="passInput" placeholder="أدخل كلمة السر..." style="padding:10px; background:#222; border:1px solid #d4af37; color:#fff; border-radius:5px; text-align:center;">
+    <h3 style="color:#d4af37; font-family:'Cairo'; margin:0;">منطقة الإدارة</h3>
+    <input type="password" id="passInput" placeholder="كلمة السر...">
     <br><br>
-    <button onclick="checkPass()" style="background:#d4af37; color:#000; padding:8px 25px; font-weight:bold; border:none; border-radius:5px; cursor:pointer;">دخول</button>
-    <button onclick="closeLogin()" style="background:transparent; color:#ff4444; border:none; margin-top:10px; cursor:pointer; display:block; width:100%;">إلغاء</button>
+    <button onclick="checkPass()" style="background:#d4af37; color:#000; padding:10px 30px; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">دخول</button>
+    <button onclick="closeLogin()" style="background:transparent; color:#ff4444; border:none; display:block; width:100%; margin-top:10px; cursor:pointer;">إلغاء</button>
 </div>
 
-<div id="admin-panel">
+<div id="admin-panel" style="display:none; position:fixed; bottom:20px; right:20px; background:#222; padding:20px; border-radius:15px; border:1px solid #d4af37; z-index:9999; width: 260px; box-shadow: 0 0 20px rgba(0,0,0,0.8);">
     <h3 style="color:#d4af37; margin-top:0;">إدارة المتحف</h3>
-    <input type="number" id="imgOrder" placeholder="رقم المركز">
-    <input type="text" id="artistName" placeholder="اسم الرسام...">
-    <input type="file" id="imageInput" accept="image/*" style="color:#fff;">
+    <input type="number" id="imgOrder" placeholder="رقم المركز" style="width:100%; margin-bottom:10px; background:#333; color:#fff; padding:8px; border:1px solid #444;">
+    <input type="text" id="artistName" placeholder="اسم الرسام..." style="width:100%; margin-bottom:10px; background:#333; color:#fff; padding:8px; border:1px solid #444;">
+    <input type="file" id="imageInput" accept="image/*" style="margin-bottom:15px; color:#fff; width: 100%;">
     <button onclick="uploadImage()" id="uploadBtn" style="width:100%; background:#d4af37; color:#000; padding:12px; font-weight:bold; border:none; cursor:pointer;">نشر وتحديث</button>
     <p id="status" style="color:#ffd700; font-size:11px; margin-top:12px; text-align:center;"></p>
-    <button onclick="toggleAdmin()" style="background:transparent; color:#ff4444; border:none; margin:10px auto; display:block; cursor:pointer;">إغلاق</button>
+    <button onclick="hideAdmin()" style="background:transparent; color:#ff4444; border:none; margin:10px auto; display:block; cursor:pointer;">إغلاق</button>
 </div>
 
-<div onclick="requestLogin()" style="position:fixed; bottom:0; left:0; width:40px; height:40px; cursor:pointer; opacity:0.01; background:white; z-index:10000;"></div>
+<div onclick="showLogin()" style="position:fixed; bottom:0; left:0; width:40px; height:40px; cursor:pointer; opacity:0.01; background:white; z-index:10000;"></div>
 
 <script>
-    // --- بيانات FIREBASE ---
     const firebaseConfig = {
         apiKey: "AIzaSyB3boy-qFEQsumI-c56wrjb-q-bBvpGaZc",
         authDomain: "art-heaven-2ebcc.firebaseapp.com",
@@ -150,10 +192,10 @@
     const db = firebase.database();
     const IMGBB_KEY = '9f747dc546be7780cc631dd85cd4be26';
 
-    // --- وظائف الأمان ---
-    const CORRECT_PASSWORD = "1234"; // غير كلمة السر هنا يا عمر
+    // --- نظام الأمان الجديد ---
+    const MY_PASS = "1234"; // يمكنك تغيير 1234 لأي باسورد تريده يا عمر
 
-    function requestLogin() {
+    function showLogin() {
         document.getElementById('login-screen').style.display = 'block';
         document.getElementById('passInput').focus();
     }
@@ -164,33 +206,41 @@
     }
 
     function checkPass() {
-        const input = document.getElementById('passInput').value;
-        if (input === CORRECT_PASSWORD) {
+        const pass = document.getElementById('passInput').value;
+        if(pass === MY_PASS) {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('admin-panel').style.display = 'block';
             document.getElementById('passInput').value = '';
         } else {
-            alert("كلمة السر خاطئة!");
+            alert("كلمة السر خاطئة يا عمر!");
             document.getElementById('passInput').value = '';
         }
     }
 
-    // --- بقية الوظائف ---
-    function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
+    function hideAdmin() {
+        document.getElementById('admin-panel').style.display = 'none';
+    }
+
+    // --- وظائف القائمة والموسيقى ---
+    function toggleMenu() {
+        document.getElementById('sideMenu').classList.toggle('open');
+    }
+
     function toggleSettings() {
         const box = document.getElementById('settingsBox');
         box.style.display = (box.style.display === 'block') ? 'none' : 'block';
     }
-    function changeVolume(val) { document.getElementById('bg-music').volume = val; }
+
+    function changeVolume(val) {
+        document.getElementById('bg-music').volume = val;
+    }
 
     function openCurtain() { 
         document.getElementById('curtain').classList.add('opened');
         const music = document.getElementById('bg-music');
-        music.play().catch(e => console.log("الصوت يحتاج تفاعل"));
+        music.play().catch(e => console.log("تحتاج ضغطة لتشغيل الموسيقى"));
     }
 
-    function toggleAdmin() { document.getElementById('admin-panel').style.display = 'none'; }
-    
     function viewImage(src) {
         const viewer = document.getElementById('image-viewer');
         const fullImg = document.getElementById('full-image');
@@ -202,6 +252,7 @@
         document.body.classList.remove('modal-open');
     }
 
+    // --- رفع الصور لـ Firebase ---
     async function uploadImage() {
         const file = document.getElementById('imageInput').files[0];
         const order = parseInt(document.getElementById('imgOrder').value);
@@ -220,6 +271,7 @@
         } catch (e) { status.innerText = "فشل الرفع!"; }
     }
 
+    // --- عرض الصور من Firebase ---
     db.ref('museum').on('value', (snapshot) => {
         const top3 = document.getElementById('top3-container');
         const silver = document.getElementById('silver-container');
