@@ -100,11 +100,41 @@
 <body>
 
 <div id="intro-container">
-    <video id="intro-video" autoplay muted playsinline>
+    <div id="start-overlay" style="position:absolute; z-index:100002; text-align:center;">
+        <h2 style="color:var(--gold); font-family:'Cairo'; margin-bottom:20px;">مرحباً بك في آرت هيفن</h2>
+        <button onclick="playWithSound()" style="background:var(--gold); color:black; padding:15px 40px; border:none; border-radius:30px; font-weight:bold; cursor:pointer; font-family:'Cairo';">🔊 دخول العرض</button>
+    </div>
+
+    <video id="intro-video" playsinline style="width:100%; height:100%; object-fit:cover;">
         <source src="intro.mp4" type="video/mp4">
     </video>
-    <button id="skip-btn" onclick="startMuseum()">تخطي العرض ←</button>
+    
+    <button id="skip-btn" onclick="startMuseum()" style="display:none; z-index:100003;">تخطي العرض ←</button>
 </div>
+
+<script>
+function playWithSound() {
+    const video = document.getElementById('intro-video');
+    const overlay = document.getElementById('start-overlay');
+    const skipBtn = document.getElementById('skip-btn');
+
+    overlay.style.display = 'none'; // إخفاء زر الدخول
+    skipBtn.style.display = 'block'; // إظهار زر التخطي
+    video.play(); // الآن سيعمل الفيديو بالصوت في الجوال!
+}
+
+function startMuseum() {
+    const intro = document.getElementById('intro-container');
+    const video = document.getElementById('intro-video');
+    video.pause();
+    intro.style.transition = "opacity 0.8s ease";
+    intro.style.opacity = "0";
+    setTimeout(() => { intro.style.display = "none"; }, 800);
+}
+
+// التخطي التلقائي عند انتهاء الفيديو
+document.getElementById('intro-video').onended = startMuseum;
+</script>
 
 
 <audio id="bg-music" loop>
@@ -354,6 +384,34 @@ document.getElementById('intro-video').onended = function() {
     startMuseum();
 };
 </script>
+
+<script>
+function playWithSound() {
+    const video = document.getElementById('intro-video');
+    const overlay = document.getElementById('start-overlay');
+    const skipBtn = document.getElementById('skip-btn');
+
+    overlay.style.display = 'none'; 
+    skipBtn.style.display = 'block'; 
+    video.play().catch(function(error) {
+        console.log("Video play failed:", error);
+    });
+}
+
+function startMuseum() {
+    const intro = document.getElementById('intro-container');
+    const video = document.getElementById('intro-video');
+    video.pause();
+    intro.style.transition = "opacity 0.8s ease";
+    intro.style.opacity = "0";
+    setTimeout(() => { 
+        intro.style.display = "none"; 
+    }, 800);
+}
+
+document.getElementById('intro-video').onended = startMuseum;
+</script>
+
 
 </body>
 </html>
