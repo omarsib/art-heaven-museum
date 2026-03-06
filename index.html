@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap" rel="stylesheet">
     
-   <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 </head>
 <body>
 
@@ -42,10 +42,17 @@
 
     <div id="admin-panel" style="display:none; position:fixed; bottom:20px; right:20px; background:#222; padding:20px; border-radius:15px; border:1px solid #d4af37; z-index:9999; width: 260px; box-shadow: 0 0 20px rgba(0,0,0,0.8);">
         <h3 style="color:#d4af37; margin-top:0;">إدارة المتحف</h3>
-        <label style="color:#ccc; font-size:12px;">رقم المركز (1-3 للتوب، 4+ للبقية):</label>
-        <input type="number" id="imgOrder" value="10" style="width:100%; margin-bottom:15px; background:#333; color:#fff; border:1px solid #444; padding:8px;">
+        
+        <label style="color:#ccc; font-size:12px;">رقم المركز (1-3 توب، 4-9 فضة):</label>
+        <input type="number" id="imgOrder" value="4" min="1" max="9" style="width:100%; margin-bottom:10px; background:#333; color:#fff; border:1px solid #444; padding:8px;">
+        
+        <label style="color:#ccc; font-size:12px;">اسم الرسام أو اللوحة:</label>
+        <input type="text" id="artistName" placeholder="اكتب الاسم هنا..." style="width:100%; margin-bottom:10px; background:#333; color:#fff; border:1px solid #444; padding:8px;">
+        
         <input type="file" id="imageInput" accept="image/*" style="margin-bottom:15px; color:#fff; width: 100%;">
-        <button onclick="uploadImage()" id="uploadBtn" style="width:100%; background:#d4af37; color:#000; border:none; padding:12px; font-weight:bold; border-radius:8px;">رفع وتحديث للجميع</button>
+        
+        <button onclick="uploadImage()" id="uploadBtn" style="width:100%; background:#d4af37; color:#000; border:none; padding:12px; font-weight:bold; border-radius:8px;">رفع وتحديث الاسم</button>
+        
         <p id="status" style="color:#ffd700; font-size:11px; margin-top:12px; text-align:center;"></p>
         <button onclick="toggleAdmin()" style="background:transparent; color:#ff4444; border:none; cursor:pointer; display:block; margin:10px auto;">إغلاق</button>
     </div>
@@ -53,7 +60,6 @@
     <div onclick="toggleAdmin()" style="position:fixed; bottom:0; left:0; width:30px; height:30px; cursor:pointer; opacity:0.01; background:white; z-index:10000;"></div>
 
     <script>
-        // الإعدادات من صورتك مباشرة
         const firebaseConfig = {
             apiKey: "AIzaSyB3boy-qFEQsumI-c56wrjb-q-bBvpGaZc",
             authDomain: "art-heaven-2ebcc.firebaseapp.com",
@@ -68,66 +74,66 @@
         const db = firebase.database();
         const IMGBB_KEY = '9f747dc546be7780cc631dd85cd4be26';
 
-        const defaultData = [
-            { order: 1, url: 'images/gojo.jpg', label: 'المركز الأول: Gojo' },
-            { order: 2, url: 'images/geto.jpg', label: 'المركز الثاني: Geto' },
-            { order: 3, url: 'images/shoko.jpg', label: 'المركز الثالث: Shoko' }
-        ];
-
         function openCurtain() { document.getElementById('curtain').classList.add('opened'); }
         function toggleAdmin() { const p = document.getElementById('admin-panel'); p.style.display = p.style.display==='none'?'block':'none'; }
 
         async function uploadImage() {
             const file = document.getElementById('imageInput').files[0];
             const order = parseInt(document.getElementById('imgOrder').value);
+            const name = document.getElementById('artistName').value || ("المركز " + order);
             const status = document.getElementById('status');
             const btn = document.getElementById('uploadBtn');
 
             if (!file) return alert("اختر صورة!");
-            btn.disabled = true; status.innerText = "جاري المزامنة العالمية...";
+            btn.disabled = true; status.innerText = "جاري الرفع...";
 
             const fd = new FormData(); fd.append('image', file);
             try {
                 const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method: 'POST', body: fd });
                 const d = await res.json();
                 if (d.success) {
-                    // هنا السحر: الحفظ في قاعدة البيانات العالمية
-                    await db.ref('museum/' + order).set({ url: d.data.url, order: order });
-                    status.innerText = "تم التحديث عند كل الزوار!";
+                    // حفظ الرابط والاسم الجديد في Firebase
+                    await db.ref('museum/' + order).set({ 
+                        url: d.data.url, 
+                        order: order,
+                        label: name 
+                    });
+                    status.innerText = "تم التحديث بنجاح!";
                     document.getElementById('imageInput').value = '';
+                    document.getElementById('artistName').value = '';
                 }
-            } catch (e) { status.innerText = "خطأ في الاتصال بالسحابة."; }
+            } catch (e) { status.innerText = "خطأ في الاتصال."; }
             finally { btn.disabled = false; }
         }
 
-        // قراءة البيانات وتحديث المعرض تلقائياً
+        // قراءة البيانات وعرض الـ 9 لوحات دائماً
         db.ref('museum').on('value', (snapshot) => {
             const top3 = document.getElementById('top3-container');
             const silver = document.getElementById('silver-container');
             top3.innerHTML = ''; silver.innerHTML = '';
             
             const cloudData = snapshot.val() || {};
-            let allArts = [...defaultData];
 
-            Object.values(cloudData).forEach(item => {
-                const idx = allArts.findIndex(f => f.order === item.order);
-                if (idx !== -1) allArts[idx].url = item.url;
-                else allArts.push({ order: item.order, url: item.url });
-            });
+            // حلقة تكرار لعرض 9 لوحات (3 توب و 6 فضية)
+            for (let i = 1; i <= 9; i++) {
+                const art = cloudData[i] || { 
+                    order: i, 
+                    url: 'https://via.placeholder.com/300?text=Soon', 
+                    label: "قريباً..." 
+                };
 
-            allArts.sort((a, b) => a.order - b.order).forEach(art => {
-                const isTop = art.order <= 3;
-                const frameClass = isTop ? (art.order==1?'gojo':(art.order==2?'geto':'shoko')) : 'silver';
-                const label = isTop ? (art.label || "المركز " + art.order) : "#" + art.order;
+                const isTop = i <= 3;
+                const frameClass = isTop ? (i==1?'gojo':(i==2?'geto':'shoko')) : 'silver';
                 
                 const html = `
                     <div class="frame ${frameClass}">
-                        <img src="${art.url}" onerror="this.src='https://via.placeholder.com/300?text=Wait...'">
-                        <div class="${isTop ? 'label' : 'label-silver'}">${label}</div>
+                        <img src="${art.url}">
+                        <div class="${isTop ? 'label' : 'label-silver'}">${art.label}</div>
                     </div>`;
+                
                 if (isTop) top3.innerHTML += html;
                 else silver.innerHTML += html;
-            });
+            }
         });
     </script>
 </body>
