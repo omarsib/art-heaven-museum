@@ -435,3 +435,56 @@ body {
         object-fit: cover;
     }
 }
+
+
+/* إصلاح شامل لأبعاد الجوال */
+@media (max-width: 768px) {
+    /* التأكد من أن المتحف يأخذ كامل العرض المتاح */
+    .museum, .silver-gallery {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        width: 100% !important;
+        padding: 10px 0 !important;
+        gap: 20px !important;
+    }
+
+    /* إصلاح الإطارات لتكون في المنتصف تماماً */
+    .frame, .gojo, .geto, .shoko {
+        width: 92vw !important; /* تأخذ معظم عرض الشاشة */
+        max-width: none !important;
+        margin: 0 auto !important;
+        left: 0 !important;
+        right: 0 !important;
+        grid-area: auto !important; /* إلغاء نظام الجريد القديم للجوال */
+    }
+
+    /* منع تمطيط الصور */
+    .frame img {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 3/4 !important;
+        object-fit: cover !important;
+    }
+
+    /* إخفاء القائمة الجانبية أو تصغيرها لكي لا تغطي اللوحات */
+    .side-menu {
+        width: 140px !important;
+        right: 10px !important;
+        padding: 10px !important;
+        font-size: 12px !important;
+    }
+}
+
+/* إصلاح الإنترو لكي لا يترك مساحات سوداء */
+#intro-container {
+    width: 100vw !important;
+    height: 100vh !important;
+    overflow: hidden;
+}
+
+#intro-video {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important; /* يغطي الشاشة بالكامل في الجوال */
+}
