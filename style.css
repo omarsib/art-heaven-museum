@@ -254,32 +254,57 @@ body {
     }
 }
 
-/* تنسيق الرسالة فوق الستارة */
-.welcome-msg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 100000; /* ليكون فوق الستارة تماماً */
-    text-align: center;
-    color: white;
-    font-family: 'Cairo', sans-serif;
-    width: 100%;
-    transition: 0.5s ease;
-}
-
-/* حركة الستارة عند الفتح */
-.curtain.opened .welcome-msg {
-    opacity: 0;
-    visibility: hidden;
-    transform: translate(-50%, -60%);
+/* --- تنسيق الستارة المحدث للجوال (بدون خط أصفر) --- */
+.curtain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100000;
+    display: none; /* يتم إظهارها عبر JS */
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    cursor: pointer;
+    background: #000; /* خلفية احتياطية */
 }
 
 .curtain-side {
     position: absolute;
-    top: 0; width: 50%; height: 100%;
+    top: 0;
+    width: 50.5%; /* زيادة بسيطة لضمان التداخل ومنع ظهور خط في المنتصف */
+    height: 100%;
     background: #7a0000;
     background-image: repeating-linear-gradient(90deg, #7a0000, #7a0000 40px, #8b0000 41px, #8b0000 80px);
-    transition: transform 1.8s cubic-bezier(.7,0,.3,1);
-    z-index: 99999;
+    transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1);
+    z-index: 1;
+    border: none; /* حذف الخط الأصفر نهائياً */
+}
+
+.curtain-side.left {
+    left: 0;
+    transform-origin: left;
+}
+
+.curtain-side.right {
+    right: 0;
+    transform-origin: right;
+}
+
+/* الرسالة الترحيبية */
+.welcome-msg {
+    position: relative;
+    z-index: 100001;
+    text-align: center;
+    color: white;
+    font-family: 'Cairo';
+    width: 90%; /* لضمان عدم خروج النص عن الشاشة في الجوال */
+}
+
+.welcome-msg h2 {
+    font-size: clamp(2rem, 8vw, 3.5rem); /* حجم خط مرن يتناسب مع الشاشة */
+    color: #d4af37;
+    text-shadow: 0 0 20px rgba(0,0,0,0.8);
+    margin: 10px 0;
 }

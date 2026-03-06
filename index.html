@@ -172,14 +172,15 @@
     }
 
     function startMuseum() {
-        const intro = document.getElementById('intro-container');
-        document.getElementById('intro-video').pause();
-        intro.style.opacity = "0";
-        setTimeout(() => { 
-            intro.style.display = "none"; 
-            document.getElementById('curtain').style.display = "flex"; 
-        }, 800);
-    }
+    const intro = document.getElementById('intro-container');
+    document.getElementById('intro-video').pause();
+    intro.style.opacity = "0";
+    setTimeout(() => { 
+        intro.style.display = "none"; 
+        const curtain = document.getElementById('curtain');
+        curtain.style.display = "flex"; // تأكد أنها flex وليس block
+    }, 800);
+}
     document.getElementById('intro-video').onended = startMuseum;
 
     function openCurtain() {
