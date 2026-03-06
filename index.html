@@ -11,7 +11,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     
     <style>
-        /* تصميم أيقونة القائمة (الثلاث شخطات) */
+        /* تصميم أيقونة القائمة */
         .menu-icon {
             position: fixed; top: 15px; right: 15px;
             cursor: pointer; z-index: 1001;
@@ -25,18 +25,22 @@
             border-radius: 2px; transition: 0.3s;
         }
 
-        /* القائمة الجانبية */
+        /* القائمة الجانبية - تم تعديلها لإخفاء الخط الأصفر تماماً وهي مغلقة */
         .side-menu {
-            position: fixed; top: 0; right: -280px;
+            position: fixed; top: 0; right: -285px; /* دفعناها للخارج أكثر لضمان عدم ظهور الخط */
             width: 260px; height: 100%; background: #0a0a0a;
-            box-shadow: -5px 0 20px rgba(0,0,0,0.8);
             z-index: 1000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             padding: 80px 20px; font-family: 'Cairo';
-            border-left: 2px solid #d4af37;
+            border-left: none; /* إلغاء الخط الدائم */
+            box-shadow: none;
         }
-        .side-menu.open { right: 0; }
+        /* يظهر الخط والظل فقط عندما تفتح القائمة */
+        .side-menu.open { 
+            right: 0; 
+            border-left: 2px solid #d4af37; 
+            box-shadow: -5px 0 20px rgba(0,0,0,0.8);
+        }
 
-        /* أزرار القائمة */
         .menu-item {
             display: block; color: #fff; text-decoration: none;
             padding: 15px; margin-bottom: 12px;
@@ -48,20 +52,14 @@
             background: #222; border-right-color: #d4af37; color: #d4af37;
         }
 
-        /* صندوق الإعدادات */
         .settings-box {
             display: none; padding: 15px;
             background: #111; border-radius: 10px; 
             margin-top: 5px; border: 1px solid #333;
         }
         .settings-box label { color: #d4af37; font-size: 14px; display: block; margin-bottom: 10px; }
-        
-        /* شريط التحكم بالصوت */
-        input[type="range"] {
-            width: 100%; accent-color: #d4af37; cursor: pointer;
-        }
+        input[type="range"] { width: 100%; accent-color: #d4af37; cursor: pointer; }
 
-        /* الأكواد الأصلية كما هي */
         #image-viewer {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 99999; 
@@ -98,7 +96,7 @@
 </div>
 
 <div class="side-menu" id="sideMenu">
-    <a href="server.html" class="menu-item">🌐 السيرفر</a>
+    <a href="server.html" target="_blank" class="menu-item">🌐 السيرفر</a>
     
     <div class="menu-item" onclick="toggleSettings()">⚙️ الإعدادات</div>
     
@@ -174,7 +172,6 @@
     const db = firebase.database();
     const IMGBB_KEY = '9f747dc546be7780cc631dd85cd4be26';
 
-    // وظائف القائمة المضافة
     function toggleMenu() {
         document.getElementById('sideMenu').classList.toggle('open');
     }
@@ -188,7 +185,6 @@
         document.getElementById('bg-music').volume = val;
     }
 
-    // فتح الستارة
     function openCurtain() { 
         document.getElementById('curtain').classList.add('opened');
         const music = document.getElementById('bg-music');
@@ -252,6 +248,5 @@
         }
     });
 </script>
-
 </body>
 </html>
