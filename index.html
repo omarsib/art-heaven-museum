@@ -152,10 +152,10 @@
                 const isTop = i <= 3;
                 const frameClass = isTop ? (i==1?'gojo':(i==2?'geto':'shoko')) : 'silver';
                 
-                // إضافة dblclick للتكبير هنا
+                // التعديل هنا: أضفنا on قبل dblclick
                 const html = `
                     <div class="frame ${frameClass}">
-                        <img src="${art.url}" dblclick="viewImage('${art.url}')" onerror="this.src='https://via.placeholder.com/300?text=Error'">
+                        <img src="${art.url}" ondblclick="viewImage('${art.url}')" style="cursor: zoom-in;">
                         <div class="${isTop ? 'label' : 'label-silver'}">${art.label}</div>
                     </div>`;
                 
