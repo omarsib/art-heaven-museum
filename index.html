@@ -11,86 +11,97 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     
     <style>
-        /* العنوان الذهبي مع الجلو */
+        :root { --gold: #d4af37; --glow: rgba(212, 175, 55, 0.6); }
+        body { background-color: #0a0a0a; margin: 0; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
+
+        /* العنوان الذهبي المحسن للجوال */
         .museum-title {
             text-align: center;
-            font-size: 50px;
-            font-family: 'Cairo', sans-serif;
-            color: #d4af37;
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.8), 0 0 20px rgba(212, 175, 55, 0.4);
+            font-size: clamp(30px, 8vw, 60px); /* حجم مرن حسب الشاشة */
+            color: var(--gold);
+            text-shadow: 0 0 15px var(--glow);
             margin: 20px 0;
             font-weight: 900;
         }
 
-        /* زر السيرفر */
+        /* زر السيرفر - زاوية الجوال */
         .server-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: linear-gradient(45deg, #d4af37, #b8860b);
-            color: #000;
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-weight: bold;
-            text-decoration: none;
-            cursor: pointer;
-            z-index: 1000;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-            border: none;
-            transition: 0.3s;
+            position: fixed; top: 15px; left: 15px;
+            background: var(--gold); color: #000;
+            padding: 8px 20px; border-radius: 20px;
+            font-weight: 900; font-size: 14px;
+            border: none; cursor: pointer; z-index: 2000;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
-        .server-btn:hover { transform: scale(1.1); box-shadow: 0 0 25px rgba(212, 175, 55, 0.8); }
 
-        /* نافذة معلومات السيرفر */
-        #server-modal {
+        /* صفحة السيرفر الكاملة */
+        #server-page {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 100000; justify-content: center; align-items: center;
+            background: #0f0f0f; z-index: 3000; flex-direction: column;
+            align-items: center; justify-content: center; text-align: center; padding: 20px;
+            box-sizing: border-box; overflow-y: auto;
         }
-        .server-content {
-            background: #1a1a1a; padding: 40px; border-radius: 20px; border: 2px solid #d4af37;
-            max-width: 500px; text-align: center; position: relative; color: white;
+        .server-card {
+            max-width: 600px; width: 100%; background: #1a1a1a;
+            padding: 30px; border-radius: 20px; border: 1px solid var(--gold);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
-        .server-content h2 { color: #d4af37; margin-bottom: 20px; }
-        .server-content p { line-height: 1.8; color: #ccc; }
-        .discord-link { display: inline-block; margin-top: 20px; color: #7289da; font-weight: bold; text-decoration: none; font-size: 20px; }
+        .server-card h2 { color: var(--gold); font-size: 32px; margin-bottom: 20px; }
+        .server-card p { color: #ccc; line-height: 1.8; font-size: 16px; }
+        .back-btn { margin-top: 25px; background: transparent; color: #ff4444; border: 1px solid #ff4444; padding: 10px 30px; border-radius: 10px; cursor: pointer; }
 
-        /* تعديلات التكبير (القديمة) */
-        #image-viewer { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 99999; justify-content: center; align-items: center; cursor: pointer; flex-direction: column; }
-        #image-viewer.active { display: flex; }
-        #full-image { max-width: 95vw; max-height: 90vh; object-fit: contain; border: 1px solid #d4af37; animation: zoomIn 0.3s ease; }
-        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        body.modal-open .museum, body.modal-open .silver-gallery { filter: blur(15px); }
+        /* تعديلات المعرض للجوال */
+        .museum { 
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; padding: 10px; 
+        }
+        .frame { 
+            width: 90%; max-width: 350px; /* صورة واحدة في السطر للجوال */
+            border: 2px solid var(--gold); border-radius: 15px; overflow: hidden; position: relative;
+            background: #111;
+        }
+        .frame img { width: 100%; display: block; }
+        
+        /* نافذة التكبير */
+        #image-viewer { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 4000; justify-content: center; align-items: center; }
+        #full-image { max-width: 98%; max-height: 90%; object-fit: contain; }
+
+        @media (max-width: 600px) {
+            .museum-title { margin-top: 60px; } /* مسافة للزر */
+        }
     </style>
 </head>
 <body>
 
-    <button class="server-btn" onclick="toggleServerInfo()">السيرفر</button>
+    <button class="server-btn" onclick="openServerPage()">السيرفر</button>
 
-    <div id="server-modal">
-        <div class="server-content">
-            <h2>معلومات السيرفر</h2>
-            <p>مرحباً بك في آرت هيفن! هنا حيث يجتمع الإبداع.</p>
-            <p><strong>كيف أشارك في المتحف؟</strong><br>
-            لتظهر رسوماتك هنا، يجب عليك:<br>
-            1. المشاركة في المسابقات الأسبوعية والفوز بأحد المراكز الثلاثة الأولى.<br>
-            2. تقديم رسمة مميزة جداً يتم اختيارها من قبل الإدارة.</p>
-            <a href="https://discord.gg/N5eJjDRf" class="discord-link">انضم إلينا عبر الديسكورد</a>
-            <button onclick="toggleServerInfo()" style="margin-top: 30px; background: #ff4444; color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer;">إغلاق</button>
+    <div id="server-page">
+        <div class="server-card">
+            <h2>سيرفر آرت هيفن</h2>
+            <p>أهلاً بك في الصفحة التعريفية للسيرفر. هنا يمكنك معرفة كيفية الانضمام لمتحفنا العريق.</p>
+            <hr style="border-color: #333; margin: 20px 0;">
+            <p><strong>طرق المشاركة:</strong></p>
+            <ul style="color: #ccc; text-align: right; display: inline-block;">
+                <li>الفوز بمسابقة الرسم الأسبوعية.</li>
+                <li>الحصول على لقب "رسام متميز" في السيرفر.</li>
+                <li>تقديم عمل فني يبهر الإدارة.</li>
+            </ul>
+            <br>
+            <a href="https://discord.gg/cxccGZY9U5" style="color: #7289da; text-decoration: none; font-size: 20px; font-weight: bold;">انضم للديسكورد الآن</a>
+            <br>
+            <button class="back-btn" onclick="closeServerPage()">العودة للمتحف</button>
         </div>
     </div>
 
     <div id="image-viewer" onclick="closeViewer()" ondblclick="closeViewer()">
         <img id="full-image" src="">
-        <p style="color: #d4af37; margin-top: 15px; font-family: 'Cairo';">انقر مرتين للإغلاق</p>
     </div>
 
     <div class="curtain" id="curtain" onclick="openCurtain()">
         <div class="curtain-side left"></div>
         <div class="curtain-side right"></div>
         <div class="welcome-msg">
-            <h1>مرحباً بكم في</h1>
             <h2 class="brand-name">آرت هيفن</h2>
-            <p>اضغط هنا لفتح الستارة</p>
+            <p>اضغط للفتح</p>
         </div>
     </div>
 
@@ -99,16 +110,15 @@
     <div class="museum" id="top3-container"></div>
     <div class="silver-gallery" id="silver-container"></div>
 
-    <div id="admin-panel" style="display:none; position:fixed; bottom:20px; right:20px; background:#222; padding:20px; border-radius:15px; border:1px solid #d4af37; z-index:9999; width: 260px; box-shadow: 0 0 20px rgba(0,0,0,0.8);">
-        <h3 style="color:#d4af37; margin-top:0;">إدارة المتحف</h3>
-        <input type="number" id="imgOrder" value="4" style="width:100%; margin-bottom:10px; background:#333; color:#fff; padding:8px;">
-        <input type="text" id="artistName" placeholder="اسم الرسام..." style="width:100%; margin-bottom:10px; background:#333; color:#fff; padding:8px;">
-        <input type="file" id="imageInput" accept="image/*" style="margin-bottom:15px; color:#fff; width: 100%;">
-        <button onclick="uploadImage()" id="uploadBtn" style="width:100%; background:#d4af37; color:#000; padding:12px; font-weight:bold;">نشر وتحديث</button>
-        <button onclick="toggleAdmin()" style="background:transparent; color:#ff4444; border:none; margin-top:10px;">إغلاق</button>
+    <div onclick="toggleAdmin()" style="position:fixed; bottom:0; left:0; width:40px; height:40px; cursor:pointer; opacity:0; z-index:5000;"></div>
+    
+    <div id="admin-panel" style="display:none; position:fixed; bottom:10px; right:10px; background:#222; padding:15px; border-radius:15px; border:1px solid var(--gold); z-index:5001; width: 250px;">
+        <input type="number" id="imgOrder" placeholder="رقم المركز" style="width:100%; margin-bottom:10px; background:#333; color:#fff; border:1px solid #444; padding:8px;">
+        <input type="text" id="artistName" placeholder="اسم الرسام" style="width:100%; margin-bottom:10px; background:#333; color:#fff; border:1px solid #444; padding:8px;">
+        <input type="file" id="imageInput" style="color: #fff; font-size: 12px; margin-bottom: 10px;">
+        <button onclick="uploadImage()" style="width:100%; background:var(--gold); border:none; padding:10px; font-weight:bold;">نشر</button>
+        <button onclick="toggleAdmin()" style="background:none; color:red; border:none; width:100%; margin-top:5px;">إغلاق</button>
     </div>
-
-    <div onclick="toggleAdmin()" style="position:fixed; bottom:0; left:0; width:30px; height:30px; cursor:pointer; opacity:0; z-index:10000;"></div>
 
     <script>
         const firebaseConfig = {
@@ -123,64 +133,54 @@
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const IMGBB_KEY = '9f747dc546be7780cc631dd85cd4be26';
 
         function openCurtain() { document.getElementById('curtain').classList.add('opened'); }
         function toggleAdmin() { const p = document.getElementById('admin-panel'); p.style.display = p.style.display==='none'?'block':'none'; }
         
-        // فتح وإغلاق معلومات السيرفر
-        function toggleServerInfo() {
-            const m = document.getElementById('server-modal');
-            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
-        }
+        function openServerPage() { document.getElementById('server-page').style.display = 'flex'; }
+        function closeServerPage() { document.getElementById('server-page').style.display = 'none'; }
 
         function viewImage(src) {
             document.getElementById('full-image').src = src;
-            document.getElementById('image-viewer').classList.add('active');
-            document.body.classList.add('modal-open');
+            document.getElementById('image-viewer').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
         }
-
         function closeViewer() {
-            document.getElementById('image-viewer').classList.remove('active');
-            document.body.classList.remove('modal-open');
+            document.getElementById('image-viewer').style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
 
         async function uploadImage() {
             const file = document.getElementById('imageInput').files[0];
-            const order = parseInt(document.getElementById('imgOrder').value);
-            const name = document.getElementById('artistName').value || ("المركز " + order);
-            const status = document.getElementById('status');
-            if (!file) return alert("اختر صورة!");
+            const order = document.getElementById('imgOrder').value;
+            const name = document.getElementById('artistName').value || "رسام مبدع";
+            if(!file || !order) return alert("أكمل البيانات!");
             
             const fd = new FormData(); fd.append('image', file);
             try {
-                const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method: 'POST', body: fd });
+                const res = await fetch(`https://api.imgbb.com/1/upload?key=9f747dc546be7780cc631dd85cd4be26`, {method:'POST', body:fd});
                 const d = await res.json();
-                if (d.success) {
-                    await db.ref('museum/' + order).set({ url: d.data.url, order: order, label: name });
-                    alert("تم النشر بنجاح!");
+                if(d.success) {
+                    await db.ref('museum/'+order).set({url: d.data.url, order: parseInt(order), label: name});
+                    alert("تم النشر!");
                 }
-            } catch (e) { alert("خطأ في الرفع!"); }
+            } catch(e) { alert("خطأ!"); }
         }
 
-        db.ref('museum').on('value', (snapshot) => {
+        db.ref('museum').on('value', (snap) => {
             const top3 = document.getElementById('top3-container');
             const silver = document.getElementById('silver-container');
             top3.innerHTML = ''; silver.innerHTML = '';
-            const cloudData = snapshot.val() || {};
-
-            for (let i = 1; i <= 9; i++) {
-                const art = cloudData[i] || { order: i, url: 'https://via.placeholder.com/300?text=Soon', label: "قريباً..." };
+            const data = snap.val() || {};
+            for(let i=1; i<=9; i++) {
+                const art = data[i] || {url: 'https://via.placeholder.com/300?text=Soon', label: 'قريباً...'};
                 const isTop = i <= 3;
-                const frameClass = isTop ? (i==1?'gojo':(i==2?'geto':'shoko')) : 'silver';
-                
                 const html = `
-                    <div class="frame ${frameClass}">
-                        <img src="${art.url}" ondblclick="viewImage('${art.url}')" style="cursor: pointer;">
-                        <div class="${isTop ? 'label' : 'label-silver'}">${art.label}</div>
+                    <div class="frame">
+                        <img src="${art.url}" ondblclick="viewImage('${art.url}')">
+                        <div style="background:rgba(0,0,0,0.7); color:var(--gold); padding:5px; text-align:center; font-size:12px;">${art.label}</div>
                     </div>`;
-                
-                if (isTop) top3.innerHTML += html;
+                if(isTop) top3.innerHTML += html;
                 else silver.innerHTML += html;
             }
         });
