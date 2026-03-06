@@ -32,6 +32,17 @@
     <div class="museum" id="top3-container"></div>
     <div class="silver-gallery" id="silver-container"></div>
 
+    <div id="comments-section" style="max-width: 900px; margin: 80px auto; padding: 40px; background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(15px); border-radius: 30px; border: 1px solid rgba(212, 175, 55, 0.1);">
+        <h2 class="comments-title" style="color: #d4af37; text-align: center; font-size: 2.5rem; margin-bottom: 40px;">سجل الزوار</h2>
+        <div id="comments-display" style="margin-bottom: 30px; max-height: 400px; overflow-y: auto; padding: 10px;">
+            </div>
+        <div style="display: flex; gap: 10px;">
+            <input type="text" id="visitorName" placeholder="اسمك..." style="width: 30%; background: #222; border: 1px solid #444; color: #fff; padding: 10px; border-radius: 10px;">
+            <input type="text" id="commentText" placeholder="اكتب تعليقك هنا..." style="flex: 1; background: #222; border: 1px solid #444; color: #fff; padding: 10px; border-radius: 10px;">
+            <button onclick="addComment()" style="background: #d4af37; border: none; padding: 10px 25px; border-radius: 10px; font-weight: bold; cursor: pointer;">إرسال</button>
+        </div>
+    </div>
+
     <div onclick="toggleAdmin()" style="position:fixed; bottom:0; left:0; width:40px; height:40px; cursor:pointer; opacity:0; z-index:5000;"></div>
     
     <div id="admin-panel" style="display:none; position:fixed; bottom:10px; right:10px; background:#222; padding:15px; border-radius:15px; border:1px solid #d4af37; z-index:5001; width: 250px;">
@@ -86,37 +97,26 @@
             } catch(e) { alert("خطأ في الاتصال!"); }
         }
 
+        // جلب الصور والمراكز
         db.ref('museum').on('value', (snap) => {
             const top3 = document.getElementById('top3-container');
             const silver = document.getElementById('silver-container');
             top3.innerHTML = ''; silver.innerHTML = '';
             const data = snap.val() || {};
-
-            // صورة افتراضية فخمة ومستطيلة
             const placeholder = "https://placehold.co/600x900/0a0a0a/d4af37?text=Art+Heaven";
 
             for(let i=1; i<=9; i++) {
                 const art = data[i] || {url: placeholder, label: 'الرتبة شاغرة حالياً'};
                 const isTop = i <= 3;
-                let frameClass = "";
-                let rankText = "";
-
-                if (i === 1) { frameClass = "gojo"; rankText = "المركز الأول"; }
-                else if (i === 2) { frameClass = "geto"; rankText = "المركز الثاني"; }
-                else if (i === 3) { frameClass = "shoko"; rankText = "المركز الثالث"; }
-                else { frameClass = "silver"; rankText = "المركز " + i; }
+                let frameClass = i === 1 ? "gojo" : (i <= 3 ? "geto" : "silver");
+                let rankText = i === 1 ? "المركز الأول" : i === 2 ? "المركز الثاني" : i === 3 ? "المركز الثالث" : "المركز " + i;
 
                 const html = `
                     <div class="frame ${frameClass}" style="position: relative; overflow: hidden; border-radius: 15px; background: #111;">
-                        <div class="rank-tag" style="position: absolute; top: 15px; width: 100%; text-align: center; color: #ffd700; font-weight: 900; font-size: 1.2rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.9), 0 0 10px rgba(212,175,55,0.6); z-index: 10; background: transparent;">
+                        <div class="rank-tag" style="position: absolute; top: 15px; width: 100%; text-align: center; color: #ffd700; font-weight: 900; font-size: 1.2rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.9), 0 0 10px rgba(212,175,55,0.6); z-index: 10;">
                             ${rankText}
                         </div>
-                        
-                        <img src="${art.url}" 
-                             ondblclick="viewImage('${art.url}')" 
-                             onerror="this.src='${placeholder}'"
-                             style="width: 100%; height: 100%; object-fit: cover; display: block;">
-                        
+                        <img src="${art.url}" ondblclick="viewImage('${art.url}')" onerror="this.src='${placeholder}'" style="width: 100%; height: 100%; object-fit: cover; display: block;">
                         <div style="position: absolute; bottom: 0; width: 100%; background: linear-gradient(transparent, rgba(0,0,0,0.95)); color: #d4af37; padding: 20px 5px 10px; text-align: center; font-size: 14px; font-weight: bold; z-index: 5;">
                             ${art.label}
                         </div>
@@ -125,6 +125,27 @@
                 if(isTop) top3.innerHTML += html;
                 else silver.innerHTML += html;
             }
+        });
+
+        // نظام التعليقات
+        function addComment() {
+            const name = document.getElementById('visitorName').value || "زائر";
+            const text = document.getElementById('commentText').value;
+            if(!text) return;
+            db.ref('comments').push({name, text, time: Date.now()});
+            document.getElementById('commentText').value = '';
+        }
+
+        db.ref('comments').limitToLast(10).on('value', (snap) => {
+            const display = document.getElementById('comments-display');
+            display.innerHTML = '';
+            snap.forEach(c => {
+                const val = c.val();
+                display.innerHTML += `<div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px; margin-bottom:10px; border-right:4px solid #d4af37;">
+                    <strong style="color:#d4af37;">${val.name}:</strong> <span style="color:#eee;">${val.text}</span>
+                </div>`;
+            });
+            display.scrollTop = display.scrollHeight;
         });
     </script>
 </body>
