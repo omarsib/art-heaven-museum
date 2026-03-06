@@ -185,6 +185,46 @@ body {
 .curtain.opened .right { transform: translateX(100%); }
 .curtain.opened { pointer-events: none; opacity: 0; transition: opacity 1s; }
 
+/* 8. نظام القائمة الجانبية المطور (لحل مشكلة العلوق في الجوال) */
+.side-menu {
+    position: fixed;
+    top: 0;
+    right: -100%; /* مخفية في البداية */
+    width: 260px;
+    height: 100%;
+    background: rgba(10, 10, 10, 0.98);
+    backdrop-filter: blur(15px);
+    border-left: 2px solid var(--gold);
+    z-index: 100005;
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    padding: 60px 20px;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+}
+
+.side-menu.active {
+    right: 0; /* تظهر عند إضافة كلاس active بالجافاسكريبت */
+}
+
+.close-menu {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 26px;
+    color: var(--gold);
+    cursor: pointer;
+}
+
+.menu-item {
+    color: white;
+    padding: 15px;
+    text-decoration: none;
+    font-size: 18px;
+    border-bottom: 1px solid rgba(212,175,55,0.1);
+    cursor: pointer;
+}
+
 /* 7. إعدادات الجوال (الضبط النهائي للأبعاد) */
 @media (max-width: 768px) {
     .museum {
@@ -192,6 +232,7 @@ body {
         flex-direction: column !important;
         align-items: center !important;
         gap: 25px !important;
+        padding-top: 80px !important;
     }
 
     .gojo, .geto, .shoko {
@@ -210,11 +251,5 @@ body {
     .frame img {
         height: auto !important;
         aspect-ratio: 3/4 !important;
-    }
-
-    .side-menu {
-        width: 130px !important;
-        right: 10px !important;
-        padding: 10px !important;
     }
 }
