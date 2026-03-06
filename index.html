@@ -11,22 +11,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     
     <style>
-        /* الترتيب الهرمي لضمان بقاء الأول فوق والثاني والثالث تحته */
-        .museum {
-            display: grid;
-            grid-template-areas: 
-                ". first ."
-                "second . third";
-            justify-content: center;
-            align-items: center;
-            gap: 40px;
-            padding: 20px;
-            margin-top: 50px;
-        }
-        .gojo { grid-area: first; width: 350px; height: 500px; }
-        .geto { grid-area: second; width: 300px; height: 430px; }
-        .shoko { grid-area: third; width: 300px; height: 430px; }
-
         /* نافذة التكبير المطورة */
         #image-viewer {
             display: none; 
@@ -72,6 +56,8 @@
     </style>
 </head>
 <body>
+
+    <a href="server.html" class="nav-btn">السيرفر</a>
 
     <div id="image-viewer" onclick="closeViewer()" ondblclick="closeViewer()">
         <img id="full-image" src="">
