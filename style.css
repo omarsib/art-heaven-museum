@@ -1,201 +1,263 @@
-/* --- الإعدادات العامة والخلفية المتحركة --- */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap');
 
-:root {
-    --gold: #d4af37;
-    --silver: #c0c0c0;
-    --dark: #050505;
-    --glow: rgba(212, 175, 55, 0.6);
+:root{
+--gold:#d4af37;
+--silver:#c0c0c0;
+--dark:#050505;
+--glow:rgba(212,175,55,0.6);
 }
 
-body {
-    margin: 0;
-    background: radial-gradient(circle at center, #1a1a1a 0%, var(--dark) 100%);
-    background-size: 200% 200%;
-    background-attachment: fixed;
-    color: white;
-    font-family: 'Cairo', sans-serif;
-    overflow-x: hidden;
-    direction: rtl;
-    animation: bgMove 10s ease infinite;
+/* الخلفية */
+body{
+margin:0;
+background:
+radial-gradient(circle at 30% 20%,#1f1f1f 0%,#0a0a0a 60%,#000 100%);
+color:white;
+font-family:'Cairo',sans-serif;
+overflow-x:hidden;
+direction:rtl;
 }
 
-@keyframes bgMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+/* زر السيرفر */
+.nav-btn{
+position:fixed;
+top:20px;
+left:20px;
+background:linear-gradient(145deg,#ffd86b,#c8a032);
+color:#000;
+padding:8px 20px;
+border-radius:40px;
+font-size:13px;
+font-weight:bold;
+text-decoration:none;
+z-index:1000;
+box-shadow:0 0 12px rgba(212,175,55,0.4);
+transition:0.3s;
 }
 
-/* --- نظام الستارة --- */
-.curtain {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 2000; cursor: pointer;
-    transition: visibility 0.8s;
+.nav-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 0 18px rgba(212,175,55,0.7);
 }
 
-.curtain.opened { 
-    pointer-events: none; 
-    visibility: hidden; 
-    transition-delay: 1.8s; 
+/* قاعة التوب 3 */
+.museum{
+display:grid;
+grid-template-areas:
+". first ."
+"second . third";
+justify-content:center;
+align-items:center;
+gap:50px;
+padding:40px 20px;
+max-width:1200px;
+margin:auto;
 }
 
-.curtain-side {
-    position: absolute; top: 0; width: 50%; height: 100%;
-    background: #7a0000;
-    background-image: repeating-linear-gradient(90deg, #7a0000, #7a0000 40px, #8b0000 41px, #8b0000 80px);
-    border: 2px solid #5e0000;
-    box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
-    transition: width 1.8s cubic-bezier(0.45, 0.05, 0.55, 0.95);
-    z-index: 2001;
+/* الإطار العام */
+.frame{
+position:relative;
+background:#111;
+border-radius:16px;
+overflow:hidden;
+transition:all .35s ease;
+border:2px solid rgba(212,175,55,0.2);
+box-shadow:
+0 15px 40px rgba(0,0,0,0.7),
+0 0 10px rgba(212,175,55,0.1);
 }
 
-.left { left: 0; }
-.right { right: 0; }
-.opened .curtain-side { width: 0% !important; }
-
-.welcome-msg {
-    position: absolute; width: 100%; top: 50%; left: 50%;
-    transform: translate(-50%, -50%); text-align: center;
-    color: #fff; z-index: 2005; pointer-events: none;
-    transition: opacity 0.5s ease;
+.frame:hover{
+transform:translateY(-10px) scale(1.03);
+border-color:var(--gold);
+box-shadow:
+0 20px 50px rgba(0,0,0,0.9),
+0 0 30px rgba(212,175,55,0.35);
 }
 
-.brand-name { 
-    font-size: clamp(3rem, 10vw, 6rem); 
-    color: var(--gold); 
-    text-shadow: 0 0 30px var(--glow); 
+/* المركز الأول */
+.gojo{
+grid-area:first;
+width:min(400px,90vw);
+border:3px solid #ffd700;
+box-shadow:
+0 0 40px rgba(255,215,0,0.45),
+0 20px 60px rgba(0,0,0,0.9);
 }
 
-.welcome-msg p { animation: blink 1.5s infinite; }
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-.opened .welcome-msg { opacity: 0; visibility: hidden; }
-
-/* --- العنوان الذهبي المشع --- */
-.museum-title {
-    text-align: center;
-    font-size: clamp(35px, 10vw, 65px);
-    color: var(--gold);
-    text-shadow: 0 0 20px var(--glow);
-    margin: 40px 0;
-    font-weight: 900;
+/* توهج خفيف للأول */
+.gojo::after{
+content:"";
+position:absolute;
+inset:-3px;
+border-radius:16px;
+background:linear-gradient(45deg,transparent,#ffd70055,transparent);
+opacity:0;
+transition:.4s;
 }
 
-/* --- زر السيرفر --- */
-.nav-btn {
-    position: fixed; top: 20px; left: 20px;
-    background: var(--gold); color: black;
-    padding: 10px 25px; border-radius: 50px;
-    text-decoration: none; font-weight: bold;
-    z-index: 1000; transition: 0.3s;
-    box-shadow: 0 0 15px var(--glow);
-}
-.nav-btn:hover { transform: scale(1.1); box-shadow: 0 0 25px var(--gold); }
-
-/* --- تصميم التوب 3 الهرمي --- */
-.museum {
-    display: grid;
-    grid-template-areas: 
-        ". first ."
-        "second . third";
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+.gojo:hover::after{
+opacity:1;
 }
 
-.frame {
-    position: relative;
-    background: #111;
-    border-radius: 15px;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 2px solid rgba(212, 175, 55, 0.3);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+/* الثاني والثالث */
+.geto{
+grid-area:second;
+width:min(320px,80vw);
+border:2px solid var(--gold);
 }
 
-.frame:hover {
-    transform: translateY(-15px) scale(1.05);
-    border-color: var(--gold);
-    box-shadow: 0 0 40px rgba(212, 175, 55, 0.4);
+.shoko{
+grid-area:third;
+width:min(320px,80vw);
+border:2px solid var(--gold);
 }
 
-/* توزيع المراكز */
-.gojo { 
-    grid-area: first; 
-    width: min(380px, 85vw); 
-    border: 3px solid #ffd700; 
-    box-shadow: 0 0 35px var(--glow); /* لمعة قوية للأول فقط */
-}
-.geto { grid-area: second; width: min(320px, 75vw); border: 2px solid var(--gold); }
-.shoko { grid-area: third; width: min(320px, 75vw); border: 2px solid var(--gold); }
-
-/* قاعة الفضة (اللوحات الـ 6 الإضافية) */
-.silver-gallery {
-    display: grid;
-    grid-template-columns: repeat(3, auto);
-    justify-content: center;
-    gap: 30px;
-    padding: 60px 20px;
-    max-width: 1100px;
-    margin: 0 auto;
+/* قاعة الفضة */
+.silver-gallery{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:30px;
+padding:60px 20px;
+max-width:1100px;
+margin:auto;
 }
 
-.frame.silver {
-    width: 220px;
-    border: 2px solid rgba(192, 192, 192, 0.4);
+.frame.silver{
+width:100%;
+border:2px solid rgba(192,192,192,0.3);
 }
 
-.frame.silver:hover {
-    border-color: var(--silver);
-    box-shadow: 0 0 25px rgba(192, 192, 192, 0.4);
+.frame.silver:hover{
+border-color:var(--silver);
+box-shadow:0 0 25px rgba(192,192,192,0.4);
 }
 
-/* علامات المراكز */
-.rank-tag {
-    background: rgba(0, 0, 0, 0.85);
-    color: var(--gold);
-    text-align: center;
-    padding: 8px;
-    font-weight: 900;
-    border-bottom: 1px solid var(--gold);
-    font-size: 0.9rem;
+/* الصور */
+.frame img{
+width:100%;
+height:420px;
+object-fit:cover;
+display:block;
+transition:0.4s;
 }
 
-/* تنسيق الصور */
-.frame img {
-    width: 100%;
-    height: 400px;
-    object-fit: cover;
-    display: block;
+.frame:hover img{
+transform:scale(1.04);
 }
 
-/* --- تعديلات الجوال --- */
-@media (max-width: 768px) {
-    .museum {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-    .gojo, .geto, .shoko { width: 95%; }
-    .silver-gallery {
-        grid-template-columns: repeat(2, auto);
-        gap: 15px;
-    }
-    .frame.silver { width: 100%; }
+/* اسم الرسام */
+.frame div{
+backdrop-filter:blur(6px);
 }
 
-/* تأثير التكبير والبلور */
-body.modal-open .museum, body.modal-open .silver-gallery, body.modal-open .museum-title {
-    filter: blur(10px);
-    transition: 0.3s;
+/* نافذة الصورة */
+#image-viewer{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.95);
+z-index:4000;
+justify-content:center;
+align-items:center;
+flex-direction:column;
 }
 
-/* نافذة التكبير */
-#image-viewer { 
-    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-    background: rgba(0,0,0,0.95); z-index: 4000; justify-content: center; align-items: center; 
+#image-viewer.active{
+display:flex;
 }
-#full-image { max-width: 95%; max-height: 90%; object-fit: contain; border: 1px solid var(--gold); }
+
+#full-image{
+max-width:92%;
+max-height:90%;
+border:1px solid var(--gold);
+box-shadow:0 0 30px rgba(212,175,55,0.5);
+}
+
+/* الجوال */
+@media(max-width:768px){
+
+.museum{
+display:flex;
+flex-direction:column;
+gap:25px;
+}
+
+.gojo,.geto,.shoko{
+width:95%;
+}
+
+.silver-gallery{
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+}
+
+.frame img{
+height:360px;
+}
+
+}
+
+/* إضاءة المتحف */
+.frame::before{
+content:"";
+position:absolute;
+top:-80px;
+left:50%;
+transform:translateX(-50%);
+width:160px;
+height:160px;
+
+background:radial-gradient(
+circle,
+rgba(255,220,120,0.25) 0%,
+rgba(255,220,120,0.1) 40%,
+transparent 70%
+);
+
+pointer-events:none;
+z-index:1;
+filter:blur(8px);
+}
+
+
+/* انعكاس تحت اللوحات */
+.frame::after{
+content:"";
+position:absolute;
+bottom:-60px;
+left:0;
+width:100%;
+height:60px;
+
+background:linear-gradient(
+to bottom,
+rgba(255,255,255,0.08),
+transparent
+);
+
+transform:scaleY(-1);
+opacity:0.25;
+pointer-events:none;
+}
+
+.frame:hover{
+transform:translateY(-12px) scale(1.04);
+border-color:#ffd700;
+
+box-shadow:
+0 25px 60px rgba(0,0,0,0.9),
+0 0 35px rgba(212,175,55,0.5);
+}
+
+.frame img{
+transition:transform .4s ease, filter .4s ease;
+}
+
+.frame:hover img{
+transform:scale(1.06);
+filter:brightness(1.05) contrast(1.05);
+}
