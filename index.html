@@ -52,6 +52,23 @@
 </head>
 <body>
 
+<audio id="bg-music" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+
+
+    <div class="curtain" id="curtain">
+    
+    <div class="curtain-side left"></div>
+    <div class="curtain-side right"></div>
+
+    <div class="welcome-msg">
+        <h1>Welcome to Art Heaven</h1>
+        <p>Click to enter the museum</p>
+    </div>
+
+</div>
+
     <a href="server.html" class="nav-btn">السيرفر</a>
 
     <div id="image-viewer" onclick="closeViewer()" ondblclick="closeViewer()">
@@ -116,7 +133,12 @@
         const db = firebase.database();
         const IMGBB_KEY = '9f747dc546be7780cc631dd85cd4be26';
 
-        function openCurtain() { document.getElementById('curtain').classList.add('opened'); }
+        function openCurtain() { document.getElementById('curtain').classList.add('opened');
+            // يشغل الموسيقى
+    const music = document.getElementById('bg-music');
+    music.volume = 0.5; // خفض الصوت للنصف ليكون هادئاً
+    music.play().catch(e => console.log("المتصفح يمنع التشغيل التلقائي"));
+         }
         function toggleAdmin() { const p = document.getElementById('admin-panel'); p.style.display = p.style.display==='none'?'block':'none'; }
         
         function viewImage(src) {
@@ -174,5 +196,14 @@
             }
         });
     </script>
+
+<script>
+const curtain = document.getElementById("curtain");
+
+curtain.addEventListener("click", () => {
+    curtain.classList.add("opened");
+});
+</script>
+
 </body>
 </html>
