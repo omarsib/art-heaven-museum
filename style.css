@@ -106,67 +106,20 @@ body {
     margin: 0 auto;
 }
 
-/* --- تعديل الإطارات لتصبح أطول وأرقى --- */
 .frame {
     position: relative;
-    width: 300px; /* عرض ثابت متناسق */
-    height: 450px; /* ارتفاع أطول ليعطي شكل اللوحات الفنية */
+    background: #111;
     border-radius: 15px;
     overflow: hidden;
-    background: #111;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     border: 2px solid rgba(212, 175, 55, 0.3);
-    transition: 0.4s;
-    display: flex;
-    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-/* --- المركز فوق الصورة مباشرة وبدون خلفية سوداء --- */
-.rank-tag {
-    position: absolute;
-    top: 15px;
-    width: 100%;
-    text-align: center;
-    color: #ffd700; /* لون ذهبي نقي */
-    font-weight: 900;
-    font-size: 1.2rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(212, 175, 55, 0.5);
-    z-index: 10;
-    background: transparent !important; /* إلغاء الخلفية السوداء */
-}
-
-/* --- ضبط الصورة لتملأ الإطار الطويل --- */
-.frame img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: 0.5s;
-}
-
-/* تأثير اللمعة الذهبية للمركز الأول */
-.gojo { 
-    border: 3px solid #ffd700 !important;
-    box-shadow: 0 0 30px rgba(212, 175, 55, 0.6);
-}
-
-.gojo .rank-tag {
-    font-size: 1.5rem;
-    color: #fff;
-    text-shadow: 0 0 15px #ffd700, 0 0 25px #ffd700;
-}
-
-/* --- قاعة الفضة (المراكز الباقية) --- */
-.silver-gallery {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px;
-    padding: 40px;
-}
-
-.frame.silver {
-    width: 260px;
-    height: 380px;
-    border: 2px solid rgba(192, 192, 192, 0.4);
+.frame:hover {
+    transform: translateY(-15px) scale(1.05);
+    border-color: var(--gold);
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.4);
 }
 
 /* توزيع المراكز */
