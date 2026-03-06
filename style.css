@@ -1,17 +1,21 @@
+/* =========================================
+   متحف آرت هيفن - ملف التنسيق النهائي والموحد
+   ========================================= */
+
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap');
 
 :root {
     --gold: #d4af37;
     --silver: #c0c0c0;
-    --dark: #050505;
-    --glow: rgba(212,175,55,0.6);
-    --bg-light: #1a1a1a;
-    --bg-dark: #000;
+    --dark: #0a0a0a;
+    --glow: rgba(212, 175, 55, 0.5);
+    --bg-dark: #000000;
 }
 
-/* 1. الخلفية المتحركة */
+/* 1. التنسيق العام (Body) */
 body {
     margin: 0;
+    padding: 0;
     background: radial-gradient(circle at center, #2a2a2a 0%, #0d0d0d 40%, #000000 100%);
     background-size: 200% 200%;
     background-attachment: fixed;
@@ -28,116 +32,34 @@ body {
     100% { background-position: 0% 0%; }
 }
 
-/* 2. الأزرار والقوائم */
-.nav-btn {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    background: linear-gradient(145deg, #ffd86b, #c8a032);
-    color: #000;
-    padding: 8px 20px;
-    border-radius: 40px;
-    font-size: 13px;
-    font-weight: bold;
-    text-decoration: none;
-    z-index: 1000;
-    box-shadow: 0 0 12px rgba(212,175,55,0.4);
-    transition: 0.3s;
-}
-
-.nav-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 18px rgba(212,175,55,0.7);
-}
-
-/* 3. قاعة التوب 3 (كمبيوتر) */
-.museum {
-    display: grid;
-    grid-template-areas:
-        ". first ."
-        "second . third";
-    justify-content: center;
-    align-items: center;
-    gap: 50px;
-    padding: 40px 20px;
-    max-width: 1200px;
-    margin: auto;
-}
-
-/* 4. الإطارات والتأثيرات (لمعة الجوهرة) */
-.frame {
-    position: relative;
-    background: #111;
-    border-radius: 16px;
-    overflow: hidden;
-    transition: all 0.35s ease;
-    border: 2px solid rgba(212,175,55,0.2);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.7), 0 0 10px rgba(212,175,55,0.1);
-}
-
-.frame::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -150%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transform: skewX(-25deg);
-    transition: 0.6s;
-    z-index: 5;
-}
-
-.frame:hover::before { left: 150%; }
-
-.frame:hover {
-    transform: translateY(-10px) scale(1.03);
-    border-color: var(--gold);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 30px rgba(212,175,55,0.35);
-}
-
-.gojo { grid-area: first; width: min(400px, 90vw); border: 3px solid #ffd700; }
-.geto { grid-area: second; width: min(320px, 80vw); border: 2px solid var(--gold); }
-.shoko { grid-area: third; width: min(320px, 80vw); border: 2px solid var(--gold); }
-
-/* 5. قاعة الفضة (كمبيوتر) */
-.silver-gallery {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    padding: 60px 20px;
-    max-width: 1100px;
-    margin: auto;
-}
-
-.frame.silver { width: 100%; border: 2px solid rgba(192,192,192,0.3); }
-
-/* 6. الصور والستارة والإنترو */
-.frame img {
-    width: 100%;
-    height: 420px;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.4s, filter 0.4s;
-}
-
+/* 2. شاشة الإنترو (فيديو الدخول) */
 #intro-container {
     position: fixed;
     top: 0; left: 0;
-    width: 100vw; height: 100vh;
+    width: 100vw;
+    height: 100vh;
     background: #000;
-    z-index: 100000;
+    z-index: 200000; /* فوق كل شيء */
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    transition: opacity 0.8s ease;
 }
 
-#intro-video { width: 100%; height: 100%; object-fit: cover; }
+#intro-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-#start-overlay { position: absolute; z-index: 100002; text-align: center; }
+#start-overlay {
+    position: absolute;
+    z-index: 10;
+    text-align: center;
+}
 
-#entry-btn {
+#entry-btn, #skip-btn {
     background: var(--gold);
     color: black;
     padding: 15px 40px;
@@ -146,50 +68,90 @@ body {
     font-weight: bold;
     cursor: pointer;
     font-family: 'Cairo';
+    box-shadow: 0 0 20px var(--glow);
+    transition: 0.3s;
 }
 
 #skip-btn {
-    position: absolute;
-    bottom: 30px; left: 30px;
-    z-index: 100001;
-    background: rgba(0, 0, 0, 0.6);
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    background: rgba(0,0,0,0.6);
     color: var(--gold);
     border: 1px solid var(--gold);
     padding: 12px 24px;
-    cursor: pointer;
     border-radius: 8px;
+    z-index: 200001;
 }
 
+/* 3. الستارة الترحيبية (حل مشكلة الجوال والخط الأصفر) */
 .curtain {
     position: fixed;
     top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: 99999;
-    display: flex;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100000;
+    display: none; /* تظهر عبر JS */
     justify-content: center;
     align-items: center;
+    overflow: hidden;
     cursor: pointer;
 }
 
 .curtain-side {
     position: absolute;
-    top: 0; width: 50%; height: 100%;
+    top: 0;
+    width: 50.5%; /* تداخل بسيط لمنع ظهور خط في المنتصف */
+    height: 100%;
     background: #7a0000;
     background-image: repeating-linear-gradient(90deg, #7a0000, #7a0000 40px, #8b0000 41px, #8b0000 80px);
-    transition: transform 1.8s cubic-bezier(.7,0,.3,1);
+    transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1);
+    z-index: 1;
+    border: none; /* تم حذف الحدود الذهبية المسببة للخط */
 }
 
-.curtain-side.left { left: 0; transform-origin: left; }
-.curtain-side.right { right: 0; transform-origin: right; }
+.curtain-side.left { left: 0; }
+.curtain-side.right { right: 0; }
+
+/* حركة فتح الستارة */
 .curtain.opened .left { transform: translateX(-100%); }
 .curtain.opened .right { transform: translateX(100%); }
-.curtain.opened { pointer-events: none; opacity: 0; transition: opacity 1s; }
 
-/* 8. نظام القائمة الجانبية المطور (لحل مشكلة العلوق في الجوال) */
+/* الرسالة فوق الستارة (موسطة) */
+.welcome-msg {
+    position: relative;
+    z-index: 100001;
+    text-align: center;
+    color: white;
+    font-family: 'Cairo';
+    width: 90%;
+    max-width: 600px;
+}
+
+.welcome-msg h1 { font-size: 1.5rem; margin-bottom: 10px; opacity: 0.8; }
+.welcome-msg h2 { font-size: clamp(2rem, 8vw, 3.5rem); color: var(--gold); text-shadow: 0 0 20px var(--glow); margin: 10px 0; }
+.welcome-msg p { background: rgba(212, 175, 55, 0.1); padding: 10px 20px; border-radius: 50px; border: 1px dashed var(--gold); display: inline-block; margin-top:15px; }
+
+/* إخفاء الرسالة عند الفتح */
+.curtain.opened .welcome-msg { opacity: 0; visibility: hidden; transition: 0.5s; }
+
+/* 4. القائمة الجانبية (الأزرار) */
+.menu-icon {
+    position: fixed;
+    top: 15px; right: 15px;
+    z-index: 1001;
+    cursor: pointer;
+    background: rgba(212, 175, 55, 0.1);
+    padding: 10px; border-radius: 8px;
+    display: flex; flex-direction: column; gap: 5px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.menu-icon span { width: 25px; height: 3px; background: var(--gold); transition: 0.3s; }
+
 .side-menu {
     position: fixed;
-    top: 0;
-    right: -100%; /* مخفية في البداية */
+    top: 0; right: -300px; /* مخفية تماماً */
     width: 260px;
     height: 100%;
     background: rgba(10, 10, 10, 0.98);
@@ -199,112 +161,119 @@ body {
     transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
-    padding: 60px 20px;
-    box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+    padding: 80px 20px;
 }
 
-.side-menu.active {
-    right: 0; /* تظهر عند إضافة كلاس active بالجافاسكريبت */
-}
+.side-menu.open { right: 0; box-shadow: -10px 0 30px rgba(0,0,0,0.8); }
 
-.close-menu {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    font-size: 26px;
-    color: var(--gold);
-    cursor: pointer;
-}
+.close-menu { position: absolute; top: 20px; left: 20px; font-size: 26px; color: var(--gold); cursor: pointer; }
 
 .menu-item {
+    display: block;
     color: white;
-    padding: 15px;
     text-decoration: none;
-    font-size: 18px;
-    border-bottom: 1px solid rgba(212,175,55,0.1);
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    background: #1a1a1a;
+    font-weight: bold;
+    border-right: 4px solid transparent;
+    transition: 0.3s;
+    text-align: center;
     cursor: pointer;
 }
 
-/* 7. إعدادات الجوال (الضبط النهائي للأبعاد) */
+.menu-item:hover { background: #222; border-right-color: var(--gold); color: var(--gold); }
+
+/* 5. تنسيق المعرض واللوحات (الكمبيوتر والجوال) */
+.museum {
+    display: grid;
+    grid-template-areas: ". first ." "second . third";
+    justify-content: center; gap: 50px;
+    padding: 100px 20px; max-width: 1200px; margin: auto;
+}
+
+.silver-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    padding: 60px 20px;
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* إطار اللوحة */
+.frame {
+    position: relative;
+    background: #111;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: 0.35s ease;
+    border: 2px solid rgba(212, 175, 55, 0.2);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+}
+
+.rank-badge {
+    position: absolute;
+    top: 15px; width: 100%;
+    text-align: center;
+    color: #ffd700;
+    font-weight: 900; font-size: 1.2rem;
+    text-shadow: 2px 2px 4px #000;
+    z-index: 10;
+}
+
+.frame img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    transition: transform 0.4s;
+}
+
+/* تأثير اللمعة (الجوهرة) */
+.frame::before {
+    content: "";
+    position: absolute; top: 0; left: -150%;
+    width: 50%; height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: skewX(-25deg);
+    transition: 0.6s; z-index: 5;
+}
+
+.frame:hover::before { left: 150%; }
+.frame:hover img { transform: scale(1.05); }
+
+/* تلوين المراكز */
+.gojo { grid-area: first; border: 3px solid #ffd700; box-shadow: 0 0 30px rgba(255,215,0,0.3); }
+.geto { grid-area: second; border: 2px solid var(--silver); }
+.shoko { grid-area: third; border: 2px solid var(--silver); }
+
+/* =========================================
+   تنسيقات الجوال ( iPhone / Responsive )
+   ========================================= */
 @media (max-width: 768px) {
+    /* التوب 3: واحد فوق بعض وكبار */
     .museum {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        gap: 25px !important;
+        gap: 30px !important;
         padding-top: 80px !important;
     }
 
-    .gojo, .geto, .shoko {
-        width: 92vw !important;
-    }
+    .gojo, .geto, .shoko { width: 92vw !important; margin: 0 auto !important; }
 
-    /* قاعة الفضة: 2 جنب بعض في الجوال */
+    /* قاعة الفضة: 2 جنب بعض بدقة */
     .silver-gallery {
         display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 12px !important;
-        padding: 15px 10px !important;
+        padding: 10px !important;
         width: 100% !important;
     }
 
-    .frame img {
-        height: auto !important;
-        aspect-ratio: 3/4 !important;
-    }
-}
+    .frame img { height: auto !important; aspect-ratio: 3/4 !important; }
 
-/* --- تنسيق الستارة المحدث للجوال (بدون خط أصفر) --- */
-.curtain {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 100000;
-    display: none; /* يتم إظهارها عبر JS */
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    cursor: pointer;
-    background: #000; /* خلفية احتياطية */
-}
-
-.curtain-side {
-    position: absolute;
-    top: 0;
-    width: 50.5%; /* زيادة بسيطة لضمان التداخل ومنع ظهور خط في المنتصف */
-    height: 100%;
-    background: #7a0000;
-    background-image: repeating-linear-gradient(90deg, #7a0000, #7a0000 40px, #8b0000 41px, #8b0000 80px);
-    transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1);
-    z-index: 1;
-    border: none; /* حذف الخط الأصفر نهائياً */
-}
-
-.curtain-side.left {
-    left: 0;
-    transform-origin: left;
-}
-
-.curtain-side.right {
-    right: 0;
-    transform-origin: right;
-}
-
-/* الرسالة الترحيبية */
-.welcome-msg {
-    position: relative;
-    z-index: 100001;
-    text-align: center;
-    color: white;
-    font-family: 'Cairo';
-    width: 90%; /* لضمان عدم خروج النص عن الشاشة في الجوال */
-}
-
-.welcome-msg h2 {
-    font-size: clamp(2rem, 8vw, 3.5rem); /* حجم خط مرن يتناسب مع الشاشة */
-    color: #d4af37;
-    text-shadow: 0 0 20px rgba(0,0,0,0.8);
-    margin: 10px 0;
+    /* تنسيق القائمة الجانبية للجوال */
+    .side-menu { width: 230px !important; }
 }
