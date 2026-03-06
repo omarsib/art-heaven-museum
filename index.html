@@ -11,47 +11,40 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     
     <style>
-        /* نافذة التكبير المطورة */
-        #image-viewer {
-            display: none; 
-            position: fixed; 
-            top: 0; left: 0; 
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); 
-            z-index: 99999; 
-            justify-content: center; 
-            align-items: center;
-            cursor: pointer;
-            flex-direction: column;
-        }
-        #image-viewer.active { display: flex; }
-        #full-image { 
-            max-width: 95vw; 
-            max-height: 90vh; 
-            object-fit: contain; 
-            border: 1px solid #d4af37;
-            animation: zoomIn 0.3s ease;
-        }
-        @keyframes zoomIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        body.modal-open .museum, body.modal-open .silver-gallery, body.modal-open #comments-section {
-            filter: blur(15px);
-            pointer-events: none;
+        /* زر السيرفر - كما ظهر في لقطة الشاشة */
+        .nav-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #d4af37;
+            color: #000;
+            padding: 10px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+            font-family: 'Cairo';
         }
 
-        /* تنسيق رتبة المركز فوق الصورة مباشرة بدون خطوط */
+        #image-viewer {
+            display: none; position: fixed; top: 0; left: 0; 
+            width: 100%; height: 100%; background: rgba(0,0,0,0.95); 
+            z-index: 99999; justify-content: center; align-items: center;
+            cursor: pointer; flex-direction: column;
+        }
+        #image-viewer.active { display: flex; }
+        #full-image { max-width: 95vw; max-height: 90vh; object-fit: contain; border: 1px solid #d4af37; animation: zoomIn 0.3s ease; }
+        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        body.modal-open .museum, body.modal-open .silver-gallery, body.modal-open #comments-section {
+            filter: blur(15px); pointer-events: none;
+        }
+
         .rank-badge {
-            position: absolute;
-            top: 15px;
-            width: 100%;
-            text-align: center;
-            color: #ffd700;
-            font-weight: 900;
-            font-size: 1.2rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.9), 0 0 10px rgba(212, 175, 55, 0.6);
-            z-index: 10;
+            position: absolute; top: 15px; width: 100%; text-align: center;
+            color: #ffd700; font-weight: 900; font-size: 1.2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9), 0 0 10px rgba(212, 175, 55, 0.6); z-index: 10;
         }
     </style>
 </head>
@@ -75,7 +68,6 @@
     </div>
 
     <div class="museum" id="top3-container"></div>
-    
     <div class="silver-gallery" id="silver-container"></div>
 
     <div id="comments-section" style="max-width: 900px; margin: 50px auto; padding: 20px;">
@@ -97,7 +89,7 @@
         </script>
     </div>
 
-    <div id="admin-panel" style="display:none; position:fixed; bottom:20px; right:20px; background:#222; padding:20px; border-radius:15px; border:1px solid #d4af37; z-index:9999; width: 260px; box-shadow: 0 0 20px rgba(0,0,0,0.8);">
+    <div id="admin-panel" style="display:none; position:fixed; bottom:20px; right:20px; background:#222; padding:20px; border-radius:15px; border:1px solid #d4af37; z-index:9999; width: 260px;">
         <h3 style="color:#d4af37; margin-top:0;">إدارة المتحف</h3>
         <input type="number" id="imgOrder" placeholder="رقم المركز" style="width:100%; margin-bottom:10px; background:#333; color:#fff; padding:8px;">
         <input type="text" id="artistName" placeholder="اسم الرسام..." style="width:100%; margin-bottom:10px; background:#333; color:#fff; padding:8px;">
@@ -119,26 +111,14 @@
             messagingSenderId: "982139498852",
             appId: "1:982139498852:web:fcb1bec8520a896e988a71"
         };
-
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const IMGBB_KEY = '9f747dc546be7780cc631dd85cd4be26';
 
         function openCurtain() { document.getElementById('curtain').classList.add('opened'); }
         function toggleAdmin() { const p = document.getElementById('admin-panel'); p.style.display = p.style.display==='none'?'block':'none'; }
-
-        function viewImage(src) {
-            const viewer = document.getElementById('image-viewer');
-            const fullImg = document.getElementById('full-image');
-            fullImg.src = src;
-            viewer.classList.add('active');
-            document.body.classList.add('modal-open');
-        }
-
-        function closeViewer() {
-            document.getElementById('image-viewer').classList.remove('active');
-            document.body.classList.remove('modal-open');
-        }
+        function viewImage(src) { document.getElementById('full-image').src = src; document.getElementById('image-viewer').classList.add('active'); document.body.classList.add('modal-open'); }
+        function closeViewer() { document.getElementById('image-viewer').classList.remove('active'); document.body.classList.remove('modal-open'); }
 
         async function uploadImage() {
             const file = document.getElementById('imageInput').files[0];
@@ -146,7 +126,6 @@
             const name = document.getElementById('artistName').value || ("الرسام المبدع");
             const status = document.getElementById('status');
             if (!file || isNaN(order)) return alert("أكمل البيانات!");
-            
             status.innerText = "جاري الرفع...";
             const fd = new FormData(); fd.append('image', file);
             try {
@@ -180,7 +159,6 @@
                             ${art.label}
                         </div>
                     </div>`;
-                
                 if (isTop) top3.innerHTML += html;
                 else silver.innerHTML += html;
             }
