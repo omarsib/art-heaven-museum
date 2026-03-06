@@ -43,6 +43,7 @@
     </div>
 
     <script>
+        // إعدادات Firebase الخاصة بك
         const firebaseConfig = {
             apiKey: "AIzaSyB3boy-qFEQsumI-c56wrjb-q-bBvpGaZc",
             authDomain: "art-heaven-2ebcc.firebaseapp.com",
@@ -56,6 +57,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        // وظائف الواجهة
         function openCurtain() { document.getElementById('curtain').classList.add('opened'); }
         function toggleAdmin() { const p = document.getElementById('admin-panel'); p.style.display = p.style.display==='none'?'block':'none'; }
 
@@ -69,6 +71,7 @@
             document.body.classList.remove('modal-open');
         }
 
+        // وظيفة الرفع لـ ImgBB و Firebase
         async function uploadImage() {
             const file = document.getElementById('imageInput').files[0];
             const order = document.getElementById('imgOrder').value;
@@ -83,18 +86,21 @@
                     await db.ref('museum/'+order).set({url: d.data.url, order: parseInt(order), label: name});
                     alert("تم النشر!");
                 }
-            } catch(e) { alert("خطأ!"); }
+            } catch(e) { alert("خطأ في الاتصال!"); }
         }
 
-        // جلب الصور (تم إصلاح التكرار هنا)
+        // جلب البيانات وعرضها بنظام الرتب الجديد
         db.ref('museum').on('value', (snap) => {
             const top3 = document.getElementById('top3-container');
             const silver = document.getElementById('silver-container');
             top3.innerHTML = ''; silver.innerHTML = '';
             const data = snap.val() || {};
 
+            // صورة افتراضية فخمة عند عدم وجود بيانات (تمنع شكل الصورة المكسورة)
+            const placeholder = "https://placehold.co/600x600/111/d4af37?text=الرتبة+شاغرة";
+
             for(let i=1; i<=9; i++) {
-                const art = data[i] || {url: 'https://via.placeholder.com/300?text=Soon', label: 'قريباً...'};
+                const art = data[i] || {url: placeholder, label: 'في انتظار المبدع...'};
                 const isTop = i <= 3;
                 let frameClass = "";
                 let rankText = "";
@@ -107,8 +113,12 @@
                 const html = `
                     <div class="frame ${frameClass}">
                         <div class="rank-tag">${rankText}</div>
-                        <img src="${art.url}" ondblclick="viewImage('${art.url}')">
-                        <div style="background:rgba(0,0,0,0.7); color:#fff; padding:5px; text-align:center; font-size:12px;">${art.label}</div>
+                        <img src="${art.url}" 
+                             ondblclick="viewImage('${art.url}')" 
+                             onerror="this.src='${placeholder}'">
+                        <div style="background:rgba(0,0,0,0.8); color:#d4af37; padding:10px; text-align:center; font-size:14px; font-weight:bold; border-top:1px solid rgba(212,175,55,0.2);">
+                            ${art.label}
+                        </div>
                     </div>`;
 
                 if(isTop) top3.innerHTML += html;
