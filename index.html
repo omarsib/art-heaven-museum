@@ -11,6 +11,22 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     
     <style>
+        /* إضافة تنسيق زر السيرفر المفقود لضمان ظهوره في مكانه */
+        .nav-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #d4af37;
+            color: #000;
+            padding: 10px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+            font-family: 'Cairo';
+        }
+
         /* نافذة التكبير المطورة */
         #image-viewer {
             display: none; 
@@ -41,7 +57,7 @@
             pointer-events: none;
         }
 
-        /* تنسيق رتبة المركز فوق الصورة مباشرة بدون خطوط */
+        /* تنسيق رتبة المركز فوق الصورة */
         .rank-badge {
             position: absolute;
             top: 15px;
@@ -75,7 +91,6 @@
     </div>
 
     <div class="museum" id="top3-container"></div>
-    
     <div class="silver-gallery" id="silver-container"></div>
 
     <div id="comments-section" style="max-width: 900px; margin: 50px auto; padding: 20px;">
@@ -83,8 +98,8 @@
         <script src="https://giscus.app/client.js"
             data-repo="omarsib/art-heaven-museum"
             data-repo-id="R_kgNOF7e_2A" 
-            data-category="Announcements"
-            data-category-id="DIC_kwNOF7e_2M4Cke-R"
+            data-category="General" 
+            data-category-id="DIC_kwNOF7e_2M4Cke-S" 
             data-mapping="pathname"
             data-strict="0"
             data-reactions-enabled="1"
