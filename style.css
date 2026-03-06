@@ -10,23 +10,37 @@
 }
 
 /* الخلفية المتحركة */
+/* --- الجزء المعدل للخلفية الفخمة --- */
+:root {
+    --gold: #d4af37;
+    --silver: #c0c0c0;
+    --dark: #050505;
+    --glow: rgba(212,175,55,0.6);
+    --bg-light: #1a1a1a; /* لون رمادي عميق */
+    --bg-dark: #000000;  /* أسود ملكي */
+}
+
 body {
     margin: 0;
-    background: radial-gradient(circle at 30% 20%, var(--bg-light) 0%, var(--bg-dark) 60%, var(--dark) 100%);
-    background-size: 200% 200%;
+    /* زدنا مساحة الخلفية واستخدمنا ألوان متناسقة تظهر الحركة */
+    background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 40%, #000000 100%);
+    background-size: 300% 300%;
     background-attachment: fixed;
     color: white;
     font-family: 'Cairo', sans-serif;
     overflow-x: hidden;
     direction: rtl;
-    animation: bgMove 15s ease infinite;
+    /* الأنيميشن هنا سيعمل الآن بوضوح */
+    animation: bgMove 12s ease-in-out infinite;
 }
 
+/* حركة انسيابية للخلفية تعطي إيحاء بإضاءة المتحف المتحركة */
 @keyframes bgMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
 }
+/* ------------------------------- */
 
 /* زر السيرفر */
 .nav-btn {
