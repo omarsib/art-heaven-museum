@@ -371,3 +371,17 @@ body {
     background: #d4af37;
     color: #000;
 }
+
+#skip-btn {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    z-index: 100001; /* تأكد أنه فوق الفيديو */
+    background: rgba(0, 0, 0, 0.6);
+    color: #d4af37;
+    border: 1px solid #d4af37;
+    padding: 12px 24px;
+    cursor: pointer;
+    font-family: 'Cairo';
+    border-radius: 8px;
+}

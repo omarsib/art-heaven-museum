@@ -100,9 +100,9 @@
 <body>
 
 <div id="intro-container">
-    <video id="intro-video" muted playsinline>
-        <source src="intro.mp4" type="video/mp4"> 
-        </video>
+    <video id="intro-video" autoplay muted playsinline>
+        <source src="intro.mp4" type="video/mp4">
+    </video>
     <button id="skip-btn" onclick="startMuseum()">تخطي العرض ←</button>
 </div>
 
@@ -305,6 +305,55 @@
             else silver.innerHTML += html;
         }
     });
+
+window.onload = function() {
+    const intro = document.getElementById('intro-container');
+    const video = document.getElementById('intro-video');
+
+    // تشغيل الفيديو تلقائياً
+    video.play();
+
+    // عند انتهاء الفيديو (بعد 15 ثانية مثلاً) تختفي الشاشة
+    video.onended = function() {
+        startMuseum();
+    };
+};
+
+function startMuseum() {
+    const intro = document.getElementById('intro-container');
+    intro.style.transition = "opacity 1s ease";
+    intro.style.opacity = "0";
+    setTimeout(() => {
+        intro.style.display = "none";
+        // هنا تظهر الستارة وتكون جاهزة للفتح
+    }, 1000);
+}
+
 </script>
+
+<script>
+function startMuseum() {
+    const intro = document.getElementById('intro-container');
+    const video = document.getElementById('intro-video');
+    
+    if (intro) {
+        // إيقاف الفيديو وتلاشي الشاشة
+        video.pause();
+        intro.style.transition = "opacity 0.8s ease";
+        intro.style.opacity = "0";
+        
+        setTimeout(() => {
+            intro.style.display = "none";
+            // هنا تبدأ الستارة بالعمل تلقائياً
+        }, 800);
+    }
+}
+
+// تشغيل التلاشي تلقائياً عند انتهاء الفيديو
+document.getElementById('intro-video').onended = function() {
+    startMuseum();
+};
+</script>
+
 </body>
 </html>
