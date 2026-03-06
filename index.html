@@ -9,52 +9,101 @@
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+    
+    <style>
+        /* نافذة التكبير المطورة */
+        #image-viewer {
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); 
+            z-index: 99999; 
+            justify-content: center; 
+            align-items: center;
+            cursor: pointer;
+            flex-direction: column;
+        }
+        #image-viewer.active { display: flex; }
+        #full-image { 
+            max-width: 95vw; 
+            max-height: 90vh; 
+            object-fit: contain; 
+            border: 1px solid #d4af37;
+            animation: zoomIn 0.3s ease;
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        body.modal-open .museum, body.modal-open .silver-gallery, body.modal-open #comments-section {
+            filter: blur(15px);
+            pointer-events: none;
+        }
+
+        /* تنسيق رتبة المركز فوق الصورة مباشرة بدون خطوط */
+        .rank-badge {
+            position: absolute;
+            top: 15px;
+            width: 100%;
+            text-align: center;
+            color: #ffd700;
+            font-weight: 900;
+            font-size: 1.2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9), 0 0 10px rgba(212, 175, 55, 0.6);
+            z-index: 10;
+        }
+    </style>
 </head>
 <body>
 
-    <a href="server.html" class="nav-btn">السيرفر</a>
-
     <div id="image-viewer" onclick="closeViewer()" ondblclick="closeViewer()">
         <img id="full-image" src="">
+        <p style="color: #d4af37; margin-top: 15px; font-family: 'Cairo';">انقر مرتين للإغلاق</p>
     </div>
 
     <div class="curtain" id="curtain" onclick="openCurtain()">
         <div class="curtain-side left"></div>
         <div class="curtain-side right"></div>
         <div class="welcome-msg">
+            <h1>مرحباً بكم في</h1>
             <h2 class="brand-name">آرت هيفن</h2>
-            <p>اضغط للفتح</p>
+            <p>اضغط هنا لفتح الستارة</p>
         </div>
     </div>
-
-    <h1 class="museum-title">متحف آرت هيفن</h1>
 
     <div class="museum" id="top3-container"></div>
     
     <div class="silver-gallery" id="silver-container"></div>
 
-    <div id="comments-section" style="max-width: 800px; margin: 50px auto; padding: 20px; background: rgba(0,0,0,0.5); border-radius: 20px; border: 1px solid var(--gold);">
-        <h2 style="color: var(--gold); text-align: center;">سجل الزوار</h2>
-        <div id="comments-display" style="height: 300px; overflow-y: auto; margin-bottom: 20px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 10px;"></div>
-        <div style="display: flex; gap: 10px;">
-            <input type="text" id="visitorName" placeholder="اسمك" style="width: 30%; padding: 10px; border-radius: 5px; border: none;">
-            <input type="text" id="commentText" placeholder="اكتب تعليقك..." style="flex: 1; padding: 10px; border-radius: 5px; border: none;">
-            <button onclick="addComment()" style="padding: 10px 20px; background: var(--gold); border: none; cursor: pointer; border-radius: 5px; font-weight: bold;">إرسال</button>
-        </div>
+    <div id="comments-section" style="max-width: 900px; margin: 50px auto; padding: 20px;">
+        <h2 class="comments-title">زهرة تقييمات الزوار</h2>
+        <script src="https://giscus.app/client.js"
+            data-repo="omarsib/art-heaven-museum"
+            data-repo-id="R_kgNOF7e_2A" 
+            data-category="Announcements"
+            data-category-id="DIC_kwNOF7e_2M4Cke-R"
+            data-mapping="pathname"
+            data-theme="dark"
+            data-lang="ar"
+            crossorigin="anonymous"
+            async>
+        </script>
     </div>
 
-    <div onclick="toggleAdmin()" style="position:fixed; bottom:0; left:0; width:40px; height:40px; cursor:pointer; opacity:0; z-index:5000;"></div>
-    
-    <div id="admin-panel" style="display:none; position:fixed; bottom:10px; right:10px; background:#222; padding:15px; border-radius:15px; border:1px solid #d4af37; z-index:5001; width: 250px;">
-        <input type="number" id="imgOrder" placeholder="رقم المركز" style="width:100%; margin-bottom:10px; background:#333; color:#fff; border:1px solid #444; padding:8px;">
-        <input type="text" id="artistName" placeholder="اسم الرسام" style="width:100%; margin-bottom:10px; background:#333; color:#fff; border:1px solid #444; padding:8px;">
-        <input type="file" id="imageInput" style="color: #fff; font-size: 12px; margin-bottom: 10px;">
-        <button onclick="uploadImage()" style="width:100%; background:#d4af37; border:none; padding:10px; font-weight:bold;">نشر</button>
-        <button onclick="toggleAdmin()" style="background:none; color:red; border:none; width:100%; margin-top:5px;">إغلاق</button>
+    <div id="admin-panel" style="display:none; position:fixed; bottom:20px; right:20px; background:#222; padding:20px; border-radius:15px; border:1px solid #d4af37; z-index:9999; width: 260px; box-shadow: 0 0 20px rgba(0,0,0,0.8);">
+        <h3 style="color:#d4af37; margin-top:0;">إدارة المتحف</h3>
+        <input type="number" id="imgOrder" placeholder="رقم المركز" style="width:100%; margin-bottom:10px; background:#333; color:#fff; padding:8px;">
+        <input type="text" id="artistName" placeholder="اسم الرسام..." style="width:100%; margin-bottom:10px; background:#333; color:#fff; padding:8px;">
+        <input type="file" id="imageInput" accept="image/*" style="margin-bottom:15px; color:#fff; width: 100%;">
+        <button onclick="uploadImage()" id="uploadBtn" style="width:100%; background:#d4af37; color:#000; padding:12px; font-weight:bold;">نشر وتحديث</button>
+        <p id="status" style="color:#ffd700; font-size:11px; margin-top:12px; text-align:center;"></p>
+        <button onclick="toggleAdmin()" style="background:transparent; color:#ff4444; border:none; margin:10px auto; display:block;">إغلاق</button>
     </div>
+
+    <div onclick="toggleAdmin()" style="position:fixed; bottom:0; left:0; width:30px; height:30px; cursor:pointer; opacity:0.01; background:white; z-index:10000;"></div>
 
     <script>
-        // إعدادات Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyB3boy-qFEQsumI-c56wrjb-q-bBvpGaZc",
             authDomain: "art-heaven-2ebcc.firebaseapp.com",
@@ -67,84 +116,68 @@
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+        const IMGBB_KEY = '9f747dc546be7780cc631dd85cd4be26';
 
-        // التحكم بالواجهة
         function openCurtain() { document.getElementById('curtain').classList.add('opened'); }
         function toggleAdmin() { const p = document.getElementById('admin-panel'); p.style.display = p.style.display==='none'?'block':'none'; }
-        
+
         function viewImage(src) {
-            document.getElementById('full-image').src = src;
-            document.getElementById('image-viewer').style.display = 'flex';
+            const viewer = document.getElementById('image-viewer');
+            const fullImg = document.getElementById('full-image');
+            fullImg.src = src;
+            viewer.classList.add('active');
             document.body.classList.add('modal-open');
         }
+
         function closeViewer() {
-            document.getElementById('image-viewer').style.display = 'none';
+            document.getElementById('image-viewer').classList.remove('active');
             document.body.classList.remove('modal-open');
         }
 
-        // رفع الصور
         async function uploadImage() {
             const file = document.getElementById('imageInput').files[0];
-            const order = document.getElementById('imgOrder').value;
-            const name = document.getElementById('artistName').value || "رسام مبدع";
-            if(!file || !order) return alert("أكمل البيانات!");
+            const order = parseInt(document.getElementById('imgOrder').value);
+            const name = document.getElementById('artistName').value || ("الرسام المبدع");
+            const status = document.getElementById('status');
+            if (!file || isNaN(order)) return alert("أكمل البيانات!");
             
+            status.innerText = "جاري الرفع...";
             const fd = new FormData(); fd.append('image', file);
             try {
-                const res = await fetch(`https://api.imgbb.com/1/upload?key=9f747dc546be7780cc631dd85cd4be26`, {method:'POST', body:fd});
+                const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method: 'POST', body: fd });
                 const d = await res.json();
-                if(d.success) {
-                    await db.ref('museum/'+order).set({url: d.data.url, order: parseInt(order), label: name});
-                    alert("تم النشر!");
+                if (d.success) {
+                    await db.ref('museum/' + order).set({ url: d.data.url, order: order, label: name });
+                    status.innerText = "تم النشر بنجاح!";
                 }
-            } catch(e) { alert("حدث خطأ!"); }
+            } catch (e) { status.innerText = "فشل الرفع!"; }
         }
 
-        // جلب الصور وعرضها بالترتيب الهرمي
-        db.ref('museum').on('value', (snap) => {
+        db.ref('museum').on('value', (snapshot) => {
             const top3 = document.getElementById('top3-container');
             const silver = document.getElementById('silver-container');
             top3.innerHTML = ''; silver.innerHTML = '';
-            const data = snap.val() || {};
-            const placeholder = "https://placehold.co/600x900/0a0a0a/d4af37?text=Art+Heaven";
+            const cloudData = snapshot.val() || {};
+            const placeholder = 'https://placehold.co/600x900/0a0a0a/d4af37?text=Art+Heaven';
 
-            for(let i=1; i<=9; i++) {
-                const art = data[i] || {url: placeholder, label: 'الرتبة شاغرة حالياً'};
+            for (let i = 1; i <= 9; i++) {
+                const art = cloudData[i] || { url: placeholder, label: "الرتبة شاغرة حالياً" };
                 const isTop = i <= 3;
-                let frameClass = i === 1 ? "gojo" : (i === 2 ? "geto" : (i === 3 ? "shoko" : "silver"));
-                let rankText = i === 1 ? "المركز الأول" : i === 2 ? "المركز الثاني" : i === 3 ? "المركز الثالث" : "المركز " + i;
-
+                const frameClass = isTop ? (i==1?'gojo':(i==2?'geto':'shoko')) : 'silver';
+                const rankText = i == 1 ? "المركز الأول" : i == 2 ? "المركز الثاني" : i == 3 ? "المركز الثالث" : "المركز " + i;
+                
                 const html = `
-                    <div class="frame ${frameClass}">
-                        <div class="rank-tag" style="border:none; background:transparent;">${rankText}</div>
-                        <img src="${art.url}" ondblclick="viewImage('${art.url}')" onerror="this.src='${placeholder}'">
-                        <div class="label" style="position:absolute; bottom:0; width:100%; background:linear-gradient(transparent, rgba(0,0,0,0.9)); color:#d4af37; padding:15px 5px; text-align:center; font-weight:bold;">
+                    <div class="frame ${frameClass}" style="position:relative;">
+                        <div class="rank-badge">${rankText}</div>
+                        <img src="${art.url}" ondblclick="viewImage('${art.url}')" style="cursor: pointer; width:100%; height:100%; object-fit:cover;">
+                        <div style="position:absolute; bottom:0; width:100%; background:linear-gradient(transparent, rgba(0,0,0,0.9)); color:#d4af37; padding:15px 5px; text-align:center; font-weight:bold; font-size:14px;">
                             ${art.label}
                         </div>
                     </div>`;
-
-                if(isTop) top3.innerHTML += html;
+                
+                if (isTop) top3.innerHTML += html;
                 else silver.innerHTML += html;
             }
-        });
-
-        // نظام التعليقات
-        function addComment() {
-            const name = document.getElementById('visitorName').value || "زائر";
-            const text = document.getElementById('commentText').value;
-            if(!text) return;
-            db.ref('comments').push({name, text, time: Date.now()});
-            document.getElementById('commentText').value = '';
-        }
-
-        db.ref('comments').on('value', (snap) => {
-            const display = document.getElementById('comments-display');
-            display.innerHTML = '';
-            snap.forEach(c => {
-                const v = c.val();
-                display.innerHTML += `<div style="padding:10px; border-bottom:1px solid #333;"><b style="color:#d4af37">${v.name}:</b> <span style="color:#eee">${v.text}</span></div>`;
-            });
-            display.scrollTop = display.scrollHeight;
         });
     </script>
 </body>
