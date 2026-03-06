@@ -143,10 +143,11 @@
 <div class="curtain" id="curtain" onclick="openCurtain()">
     <div class="curtain-side left"></div>
     <div class="curtain-side right"></div>
-    <div class="welcome-msg">
-        <h1>مرحباً بكم في</h1>
-        <h2 class="brand-name">آرت هيفن</h2>
-        <p>اضغط هنا لفتح الستارة</p>
+    
+    <div class="welcome-msg" id="welcomeText">
+        <h1 style="font-size: 1.5rem; margin-bottom: 10px; opacity: 0.8;">مرحباً بكم في</h1>
+        <h2 style="font-size: 3rem; color: #d4af37; text-shadow: 0 0 20px rgba(212,175,55,0.5); margin-bottom: 20px;">آرت هيفن</h2>
+        <p style="background: rgba(212,175,55,0.1); padding: 10px 20px; border-radius: 50px; border: 1px dashed #d4af37; display: inline-block;">اضغط هنا لفتح الستارة 🏛️</p>
     </div>
 </div>
 
@@ -252,10 +253,13 @@
     function changeVolume(val) { document.getElementById('bg-music').volume = val; }
 
     function openCurtain() { 
-        document.getElementById('curtain').classList.add('opened');
-        document.getElementById('bg-music').play().catch(() => {});
-    }
-
+    const curtain = document.getElementById('curtain');
+    curtain.classList.add('opened');
+    
+    // تشغيل الموسيقى
+    const music = document.getElementById('bg-music');
+    music.play().catch(() => console.log("الموسيقى تنتظر تفاعل"));
+}
     // --- عرض الصور من Firebase ---
     db.ref('museum').on('value', (snapshot) => {
         const top3 = document.getElementById('top3-container');
