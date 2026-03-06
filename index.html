@@ -11,17 +11,17 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     
     <style>
-        /* زر السيرفر كما كان */
+        /* زر السيرفر بحجم أصغر (صغرت الـ padding والخط) */
         .nav-btn {
-            position: fixed; top: 20px; right: 20px;
+            position: fixed; top: 15px; right: 15px;
             background: #d4af37; color: #000;
-            padding: 10px 25px; border-radius: 50px;
+            padding: 6px 15px; border-radius: 50px;
             text-decoration: none; font-weight: bold;
-            z-index: 1000; box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+            font-size: 13px; z-index: 1000;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
             font-family: 'Cairo';
         }
 
-        /* نافذة التكبير المطورة */
         #image-viewer {
             display: none; position: fixed; 
             top: 0; left: 0; width: 100%; height: 100%;
@@ -37,12 +37,10 @@
         }
         @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
-        /* تأثير التغبيش عند فتح الصورة */
         body.modal-open .museum, body.modal-open .silver-gallery, body.modal-open #comments-section {
             filter: blur(15px); pointer-events: none;
         }
 
-        /* تنسيق رتبة المركز فوق الصورة */
         .rank-badge {
             position: absolute; top: 15px; width: 100%;
             text-align: center; color: #ffd700;
@@ -81,7 +79,7 @@
             data-repo-id="R_kgNOF7e_2A" 
             data-category="General" 
             data-category-id="DIC_kwNOF7e_2M4Cke-S" 
-            data-mapping="pathname"
+            data-mapping="title" 
             data-strict="0"
             data-reactions-enabled="1"
             data-emit-metadata="0"
