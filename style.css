@@ -157,28 +157,30 @@ body {
     .silver-gallery .frame img { height: 260px !important; }
 }
 
-/* تنسيق زر العودة للمتحف - تصميم عمر */
-.back-btn {
+/* تنسيق زر العودة للمتحف - تعديل عمر */
+.nav-btn {
     position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background: rgba(0, 0, 0, 0.7);
-    color: var(--gold);
-    border: 1px solid var(--gold);
-    padding: 12px 25px;
-    border-radius: 50px;
+    top: 20px;      /* خليه فوق عشان يغطي الزر القديم */
+    right: 20px;    /* خليه يمين زي الصورة */
+    background: rgba(0, 0, 0, 0.6);
+    color: #d4af37 !important; /* نضمن اللون الذهبي بدل البنفسجي */
+    border: 1px solid #d4af37;
+    padding: 10px 25px;
+    border-radius: 8px; /* خليه مربع بحواف ناعمة يطلع أرقى */
     font-family: 'Cairo', sans-serif;
     font-weight: bold;
     cursor: pointer;
-    z-index: 9999;
+    z-index: 10000;
     transition: 0.3s all ease;
-    backdrop-filter: blur(5px);
-    display: none; /* يظهر فقط عند الحاجة عبر الجافا سكريبت */
+    backdrop-filter: blur(10px); /* بلور أقوى شوي عشان الفخامة */
+    display: flex; /* خليه ظاهر دائماً في صفحة السيرفر */
+    align-items: center;
+    text-decoration: none;
 }
 
-.back-btn:hover {
-    background: var(--gold);
-    color: black;
-    box-shadow: 0 0 20px var(--glow);
-    transform: scale(1.05);
+.nav-btn:hover {
+    background: #d4af37;
+    color: black !important;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    transform: translateY(-3px); /* تأثير رفعة بسيطة بدل التكبير */
 }

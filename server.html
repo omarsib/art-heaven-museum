@@ -6,13 +6,13 @@
     <title>معلومات السيرفر - آرت هيفن</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        /* التنسيق الجديد لزر العودة - تصميم عمر */
+        /* --- تنسيق زر العودة المحدث (عمر) --- */
         .nav-btn {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: rgba(0, 0, 0, 0.6); /* خلفية داكنة شفافة */
-            color: #d4af37 !important; /* لون ذهبي */
+            background: rgba(0, 0, 0, 0.6); /* خلفية معتمة جزئياً */
+            color: #d4af37 !important; /* اللون الذهبي */
             border: 1px solid #d4af37;
             padding: 10px 25px;
             border-radius: 8px;
@@ -20,40 +20,55 @@
             font-family: 'Cairo', sans-serif;
             font-weight: bold;
             z-index: 1000;
-            backdrop-filter: blur(10px); /* تأثير البلور السحري */
+            backdrop-filter: blur(10px); /* تأثير البلور الاحترافي */
             -webkit-backdrop-filter: blur(10px);
             transition: 0.3s all ease;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .nav-btn:hover {
             background: #d4af37;
             color: #000 !important;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+            transform: translateY(-2px);
         }
 
-        /* تنسيق عام للخلفية ليتناسب مع المتحف */
+        /* --- تنسيق الصفحة العام --- */
         body {
             margin: 0;
             padding: 0;
-            background: #0d0d0d; /* أسود فخم */
+            background: #0d0d0d;
             color: white;
             font-family: 'Cairo', sans-serif;
-            overflow: hidden;
         }
 
-        .card {
-            background: rgba(26, 26, 26, 0.9);
+        .server-card {
+            background: #1a1a1a;
             padding: 40px;
             border-radius: 20px;
             border: 2px solid #d4af37;
             max-width: 600px;
-            width: 100%;
+            width: 90%;
             text-align: center;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .discord-btn {
+            background: #7289da;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+        .discord-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(114, 137, 218, 0.4);
         }
     </style>
 </head>
@@ -62,18 +77,18 @@
     <a href="index.html" class="nav-btn">← العودة للمتحف</a>
 
     <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px;">
-        <div class="card">
+        <div class="server-card">
             <h1 style="color: #d4af37;">سيرفر آرت هيفن 🎨</h1>
             <p style="font-size: 18px; line-height: 2;">
                 مرحباً بك في عالم الإبداع! لكي تكون جزءاً من هذا المتحف وتُعرض لوحتك هنا، عليك اتباع الآتي:
             </p>
-            <ul style="text-align: right; display: inline-block; font-size: 16px; color: #ccc;">
-                <li>🔥 المشاركة في مسابقات السيرفر الأسبوعية.</li>
-                <li>🏆 الفوز بالمركز الأول أو الثاني أو الثالث.</li>
-                <li>✨ أو أن ترسم رسمة استثنائية يختارها فريق الإدارة.</li>
+            <ul style="text-align: right; display: inline-block; font-size: 16px; color: #ccc; list-style: none; padding: 0;">
+                <li style="margin-bottom: 10px;">🔥 المشاركة في مسابقات السيرفر الأسبوعية.</li>
+                <li style="margin-bottom: 10px;">🏆 الفوز بالمركز الأول أو الثاني أو الثالث.</li>
+                <li style="margin-bottom: 10px;">✨ أو أن ترسم رسمة استثنائية يختارها فريق الإدارة.</li>
             </ul>
             <br><br>
-            <a href="https://discord.gg/YnsvKUkgRX" style="background: #7289da; color: white; padding: 15px 40px; border-radius: 10px; text-decoration: none; font-weight: bold; display: inline-block; transition: 0.3s;">انضم إلينا في ديسكورد</a>
+            <a href="https://discord.gg/YnsvKUkgRX" class="discord-btn">انضم إلينا في ديسكورد</a>
         </div>
     </div>
 
