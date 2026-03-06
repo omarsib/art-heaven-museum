@@ -261,3 +261,81 @@ transition:transform .4s ease, filter .4s ease;
 transform:scale(1.06);
 filter:brightness(1.05) contrast(1.05);
 }
+
+/* --- نظام الستارة --- */
+
+.curtain{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+
+z-index:99999;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+cursor:pointer;
+overflow:hidden;
+}
+
+.curtain.opened{
+pointer-events:none;
+}
+
+.curtain-side{
+position:absolute;
+top:0;
+width:50%;
+height:100%;
+
+background:#7a0000;
+
+background-image:repeating-linear-gradient(
+90deg,
+#7a0000,
+#7a0000 40px,
+#8b0000 41px,
+#8b0000 80px
+);
+
+box-shadow:inset 0 0 120px rgba(0,0,0,0.9);
+
+transition:transform 1.8s cubic-bezier(.7,0,.3,1);
+}
+
+.curtain-side.left{
+left:0;
+transform-origin:left;
+}
+
+.curtain-side.right{
+right:0;
+transform-origin:right;
+}
+
+/* حركة فتح الستارة */
+
+.curtain.opened .left{
+transform:translateX(-100%);
+}
+
+.curtain.opened .right{
+transform:translateX(100%);
+}
+
+/* رسالة الترحيب */
+
+.welcome-msg{
+position:absolute;
+text-align:center;
+z-index:5;
+color:white;
+transition:opacity .5s;
+}
+
+.curtain.opened .welcome-msg{
+opacity:0;
+}
