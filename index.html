@@ -11,7 +11,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     
     <style>
-        /* زر السيرفر بحجم أصغر (صغرت الـ padding والخط) */
+        /* زر السيرفر بحجم أصغر */
         .nav-btn {
             position: fixed; top: 15px; right: 15px;
             background: #d4af37; color: #000;
@@ -56,41 +56,28 @@
     <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
 </audio>
 
+<a href="server.html" class="nav-btn">السيرفر</a>
 
-    <div class="curtain" id="curtain">
-    
+<div class="curtain" id="curtain" onclick="openCurtain()">
     <div class="curtain-side left"></div>
     <div class="curtain-side right"></div>
-
     <div class="welcome-msg">
-        <h1>Welcome to Art Heaven</h1>
-        <p>Click to enter the museum</p>
+        <h1>مرحباً بكم في</h1>
+        <h2 class="brand-name">آرت هيفن</h2>
+        <p>اضغط هنا لفتح الستارة</p>
     </div>
-
 </div>
 
-    <a href="server.html" class="nav-btn">السيرفر</a>
+<div id="image-viewer" onclick="closeViewer()" ondblclick="closeViewer()">
+    <img id="full-image" src="">
+    <p style="color: #d4af37; margin-top: 15px; font-family: 'Cairo';">انقر مرتين للإغلاق</p>
+</div>
 
-    <div id="image-viewer" onclick="closeViewer()" ondblclick="closeViewer()">
-        <img id="full-image" src="">
-        <p style="color: #d4af37; margin-top: 15px; font-family: 'Cairo';">انقر مرتين للإغلاق</p>
-    </div>
+<div class="museum" id="top3-container"></div>
+<div class="silver-gallery" id="silver-container"></div>
 
-    <div class="curtain" id="curtain" onclick="openCurtain()">
-        <div class="curtain-side left"></div>
-        <div class="curtain-side right"></div>
-        <div class="welcome-msg">
-            <h1>مرحباً بكم في</h1>
-            <h2 class="brand-name">آرت هيفن</h2>
-            <p>اضغط هنا لفتح الستارة</p>
-        </div>
-    </div>
-
-    <div class="museum" id="top3-container"></div>
-    <div class="silver-gallery" id="silver-container"></div>
-
-    <div id="comments-section" style="max-width: 900px; margin: 50px auto; padding: 20px;">
-        <script src="https://giscus.app/client.js"
+<div id="comments-section" style="max-width: 900px; margin: 50px auto; padding: 20px;">
+    <script src="https://giscus.app/client.js"
         data-repo="omarsib/art-heaven-museum"
         data-repo-id="R_kgDORdS7Fw"
         data-category="Show and tell"
@@ -104,105 +91,99 @@
         data-lang="ar"
         crossorigin="anonymous"
         async>
-</script>
-    </div>
-
-    <div id="admin-panel" style="display:none; position:fixed; bottom:20px; right:20px; background:#222; padding:20px; border-radius:15px; border:1px solid #d4af37; z-index:9999; width: 260px; box-shadow: 0 0 20px rgba(0,0,0,0.8);">
-        <h3 style="color:#d4af37; margin-top:0;">إدارة المتحف</h3>
-        <input type="number" id="imgOrder" placeholder="رقم المركز" style="width:100%; margin-bottom:10px; background:#333; color:#fff; padding:8px;">
-        <input type="text" id="artistName" placeholder="اسم الرسام..." style="width:100%; margin-bottom:10px; background:#333; color:#fff; padding:8px;">
-        <input type="file" id="imageInput" accept="image/*" style="margin-bottom:15px; color:#fff; width: 100%;">
-        <button onclick="uploadImage()" id="uploadBtn" style="width:100%; background:#d4af37; color:#000; padding:12px; font-weight:bold;">نشر وتحديث</button>
-        <p id="status" style="color:#ffd700; font-size:11px; margin-top:12px; text-align:center;"></p>
-        <button onclick="toggleAdmin()" style="background:transparent; color:#ff4444; border:none; margin:10px auto; display:block;">إغلاق</button>
-    </div>
-
-    <div onclick="toggleAdmin()" style="position:fixed; bottom:0; left:0; width:30px; height:30px; cursor:pointer; opacity:0.01; background:white; z-index:10000;"></div>
-
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyB3boy-qFEQsumI-c56wrjb-q-bBvpGaZc",
-            authDomain: "art-heaven-2ebcc.firebaseapp.com",
-            databaseURL: "https://art-heaven-2ebcc-default-rtdb.firebaseio.com",
-            projectId: "art-heaven-2ebcc",
-            storageBucket: "art-heaven-2ebcc.firebasestorage.app",
-            messagingSenderId: "982139498852",
-            appId: "1:982139498852:web:fcb1bec8520a896e988a71"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const IMGBB_KEY = '9f747dc546be7780cc631dd85cd4be26';
-
-        function openCurtain() { document.getElementById('curtain').classList.add('opened');
-            // يشغل الموسيقى
-    const music = document.getElementById('bg-music');
-    music.volume = 0.5; // خفض الصوت للنصف ليكون هادئاً
-    music.play().catch(e => console.log("المتصفح يمنع التشغيل التلقائي"));
-         }
-        function toggleAdmin() { const p = document.getElementById('admin-panel'); p.style.display = p.style.display==='none'?'block':'none'; }
-        
-        function viewImage(src) {
-            const viewer = document.getElementById('image-viewer');
-            const fullImg = document.getElementById('full-image');
-            fullImg.src = src; viewer.classList.add('active');
-            document.body.classList.add('modal-open');
-        }
-        function closeViewer() {
-            document.getElementById('image-viewer').classList.remove('active');
-            document.body.classList.remove('modal-open');
-        }
-
-        async function uploadImage() {
-            const file = document.getElementById('imageInput').files[0];
-            const order = parseInt(document.getElementById('imgOrder').value);
-            const name = document.getElementById('artistName').value || ("الرسام المبدع");
-            const status = document.getElementById('status');
-            if (!file || isNaN(order)) return alert("أكمل البيانات!");
-            status.innerText = "جاري الرفع...";
-            const fd = new FormData(); fd.append('image', file);
-            try {
-                const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method: 'POST', body: fd });
-                const d = await res.json();
-                if (d.success) {
-                    await db.ref('museum/' + order).set({ url: d.data.url, order: order, label: name });
-                    status.innerText = "تم النشر بنجاح!";
-                }
-            } catch (e) { status.innerText = "فشل الرفع!"; }
-        }
-
-        db.ref('museum').on('value', (snapshot) => {
-            const top3 = document.getElementById('top3-container');
-            const silver = document.getElementById('silver-container');
-            top3.innerHTML = ''; silver.innerHTML = '';
-            const cloudData = snapshot.val() || {};
-            const placeholder = 'https://placehold.co/600x900/0a0a0a/d4af37?text=Art+Heaven';
-
-            for (let i = 1; i <= 9; i++) {
-                const art = cloudData[i] || { url: placeholder, label: "الرتبة شاغرة حالياً" };
-                const isTop = i <= 3;
-                const frameClass = isTop ? (i==1?'gojo':(i==2?'geto':'shoko')) : 'silver';
-                const rankText = i == 1 ? "المركز الأول" : i == 2 ? "المركز الثاني" : i == 3 ? "المركز الثالث" : "المركز " + i;
-                
-                const html = `
-                    <div class="frame ${frameClass}" style="position:relative;">
-                        <div class="rank-badge">${rankText}</div>
-                        <img src="${art.url}" ondblclick="viewImage('${art.url}')" style="cursor: pointer; width:100%; height:100%; object-fit:cover;">
-                        <div style="position:absolute; bottom:0; width:100%; background:linear-gradient(transparent, rgba(0,0,0,0.9)); color:#d4af37; padding:15px 5px; text-align:center; font-weight:bold; font-size:14px;">
-                            ${art.label}
-                        </div>
-                    </div>`;
-                if (isTop) top3.innerHTML += html;
-                else silver.innerHTML += html;
-            }
-        });
     </script>
+</div>
+
+<div id="admin-panel" style="display:none; position:fixed; bottom:20px; right:20px; background:#222; padding:20px; border-radius:15px; border:1px solid #d4af37; z-index:9999; width: 260px; box-shadow: 0 0 20px rgba(0,0,0,0.8);">
+    <h3 style="color:#d4af37; margin-top:0;">إدارة المتحف</h3>
+    <input type="number" id="imgOrder" placeholder="رقم المركز" style="width:100%; margin-bottom:10px; background:#333; color:#fff; padding:8px;">
+    <input type="text" id="artistName" placeholder="اسم الرسام..." style="width:100%; margin-bottom:10px; background:#333; color:#fff; padding:8px;">
+    <input type="file" id="imageInput" accept="image/*" style="margin-bottom:15px; color:#fff; width: 100%;">
+    <button onclick="uploadImage()" id="uploadBtn" style="width:100%; background:#d4af37; color:#000; padding:12px; font-weight:bold;">نشر وتحديث</button>
+    <p id="status" style="color:#ffd700; font-size:11px; margin-top:12px; text-align:center;"></p>
+    <button onclick="toggleAdmin()" style="background:transparent; color:#ff4444; border:none; margin:10px auto; display:block;">إغلاق</button>
+</div>
+
+<div onclick="toggleAdmin()" style="position:fixed; bottom:0; left:0; width:30px; height:30px; cursor:pointer; opacity:0.01; background:white; z-index:10000;"></div>
 
 <script>
-const curtain = document.getElementById("curtain");
+    const firebaseConfig = {
+        apiKey: "AIzaSyB3boy-qFEQsumI-c56wrjb-q-bBvpGaZc",
+        authDomain: "art-heaven-2ebcc.firebaseapp.com",
+        databaseURL: "https://art-heaven-2ebcc-default-rtdb.firebaseio.com",
+        projectId: "art-heaven-2ebcc",
+        storageBucket: "art-heaven-2ebcc.firebasestorage.app",
+        messagingSenderId: "982139498852",
+        appId: "1:982139498852:web:fcb1bec8520a896e988a71"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const IMGBB_KEY = '9f747dc546be7780cc631dd85cd4be26';
 
-curtain.addEventListener("click", () => {
-    curtain.classList.add("opened");
-});
+    // وظيفة فتح الستارة الواحدة
+    function openCurtain() { 
+        document.getElementById('curtain').classList.add('opened');
+        const music = document.getElementById('bg-music');
+        music.volume = 0.5;
+        music.play().catch(e => console.log("الموسيقى تتطلب تفاعل المستخدم"));
+    }
+
+    function toggleAdmin() { const p = document.getElementById('admin-panel'); p.style.display = p.style.display==='none'?'block':'none'; }
+    
+    function viewImage(src) {
+        const viewer = document.getElementById('image-viewer');
+        const fullImg = document.getElementById('full-image');
+        fullImg.src = src; viewer.classList.add('active');
+        document.body.classList.add('modal-open');
+    }
+    function closeViewer() {
+        document.getElementById('image-viewer').classList.remove('active');
+        document.body.classList.remove('modal-open');
+    }
+
+    async function uploadImage() {
+        const file = document.getElementById('imageInput').files[0];
+        const order = parseInt(document.getElementById('imgOrder').value);
+        const name = document.getElementById('artistName').value || ("الرسام المبدع");
+        const status = document.getElementById('status');
+        if (!file || isNaN(order)) return alert("أكمل البيانات!");
+        status.innerText = "جاري الرفع...";
+        const fd = new FormData(); fd.append('image', file);
+        try {
+            const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method: 'POST', body: fd });
+            const d = await res.json();
+            if (d.success) {
+                await db.ref('museum/' + order).set({ url: d.data.url, order: order, label: name });
+                status.innerText = "تم النشر بنجاح!";
+            }
+        } catch (e) { status.innerText = "فشل الرفع!"; }
+    }
+
+    db.ref('museum').on('value', (snapshot) => {
+        const top3 = document.getElementById('top3-container');
+        const silver = document.getElementById('silver-container');
+        top3.innerHTML = ''; silver.innerHTML = '';
+        const cloudData = snapshot.val() || {};
+        const placeholder = 'https://placehold.co/600x900/0a0a0a/d4af37?text=Art+Heaven';
+
+        for (let i = 1; i <= 9; i++) {
+            const art = cloudData[i] || { url: placeholder, label: "الرتبة شاغرة حالياً" };
+            const isTop = i <= 3;
+            const frameClass = isTop ? (i==1?'gojo':(i==2?'geto':'shoko')) : 'silver';
+            const rankText = i == 1 ? "المركز الأول" : i == 2 ? "المركز الثاني" : i == 3 ? "المركز الثالث" : "المركز " + i;
+            
+            const html = `
+                <div class="frame ${frameClass}" style="position:relative;">
+                    <div class="rank-badge">${rankText}</div>
+                    <img src="${art.url}" ondblclick="viewImage('${art.url}')" style="cursor: pointer; width:100%; height:100%; object-fit:cover;">
+                    <div style="position:absolute; bottom:0; width:100%; background:linear-gradient(transparent, rgba(0,0,0,0.9)); color:#d4af37; padding:15px 5px; text-align:center; font-weight:bold; font-size:14px;">
+                        ${art.label}
+                    </div>
+                </div>`;
+            if (isTop) top3.innerHTML += html;
+            else silver.innerHTML += html;
+        }
+    });
 </script>
 
 </body>
